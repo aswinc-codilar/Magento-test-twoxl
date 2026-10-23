@@ -1,0 +1,17 @@
+<?php
+/**
+ * "Top" button that appears after scrolling down and scrolls the page back to the top
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<button type="button" class="back-to-top" hidden
+        aria-label="<?= $escaper->escapeHtmlAttr(__('Back to top')) ?>"
+        data-mage-init='{"backToTop":{"offset":<?= (int) ($block->getData('offset') ?: 300) ?>}}'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="40" viewBox="0 0 24 40" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 38V3M3 12l9-9 9 9"/>
+    </svg>
+    <span><?= $escaper->escapeHtml(__('Top')) ?></span>
+</button>

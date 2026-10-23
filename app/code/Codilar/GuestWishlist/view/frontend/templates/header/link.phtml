@@ -1,0 +1,38 @@
+<?php
+/**
+ * Header heart icon with the wish list item count (guests and customers)
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+// Guest page redirects customers to their wish list, so it's a safe link before the section loads
+$defaultUrl = $block->getUrl('guestwishlist');
+?>
+<div class="header-icon header-wishlist" data-bind="scope: 'headerWishlist'">
+    <a class="header-icon-trigger"
+       href="<?= $escaper->escapeUrl($defaultUrl) ?>"
+       data-bind="attr: {href: wishlist().url || '<?= $escaper->escapeJs($defaultUrl) ?>'}"
+       title="<?= $escaper->escapeHtmlAttr(__('My Wish List')) ?>"
+       aria-label="<?= $escaper->escapeHtmlAttr(__('My Wish List')) ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+            <path d="M12 20.5s-8.5-5.1-8.5-11A4.6 4.6 0 0 1 12 6.8a4.6 4.6 0 0 1 8.5 2.7c0 5.9-8.5 11-8.5 11Z"/>
+        </svg>
+        <span class="header-wishlist-count" style="display: none"
+              data-bind="visible: wishlist().count > 0, text: wishlist().count"></span>
+    </a>
+</div>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "headerWishlist": {
+                        "component": "Codilar_GuestWishlist/js/view/header-wishlist"
+                    }
+                }
+            }
+        }
+    }
+</script>

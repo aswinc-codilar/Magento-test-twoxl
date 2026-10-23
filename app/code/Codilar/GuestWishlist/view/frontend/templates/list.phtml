@@ -1,0 +1,58 @@
+<?php
+/**
+ * Guest wish list page
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+/** @var \Codilar\GuestWishlist\ViewModel\GuestWishlistItems $viewModel */
+$viewModel = $block->getData('view_model');
+$products = $viewModel->getProducts();
+/** @var \Magento\Framework\Pricing\Render|false $priceRender */
+$priceRender = $block->getLayout()->getBlock('product.price.render.default');
+?>
+<div class="guest-wishlist">
+    <p class="guest-wishlist-note">
+        <?= $escaper->escapeHtml(__('Your wish list is saved on this device.')) ?>
+        <a href="<?= $escaper->escapeUrl($viewModel->getLoginUrl()) ?>"><?= $escaper->escapeHtml(__('Log in or create an account')) ?></a>
+        <?= $escaper->escapeHtml(__('to keep it in your account.')) ?>
+    </p>
+
+    <?php if (!$products): ?>
+        <div class="message info empty"><span><?= $escaper->escapeHtml(__('You have no items in your wish list.')) ?></span></div>
+    <?php else: ?>
+        <ol class="guest-wishlist-items">
+            <?php foreach ($products as $product): ?>
+                <?php $addToCart = $viewModel->getAddToCartPostData($product); ?>
+                <li class="guest-wishlist-item">
+                    <a class="guest-wishlist-photo" href="<?= $escaper->escapeUrl($product->getProductUrl()) ?>">
+                        <?= /* @noEscape */ $viewModel->getImageHtml($product) ?>
+                    </a>
+                    <strong class="guest-wishlist-name">
+                        <a href="<?= $escaper->escapeUrl($product->getProductUrl()) ?>"><?= $escaper->escapeHtml($product->getName()) ?></a>
+                    </strong>
+                    <?php if ($priceRender): ?>
+                        <?= /* @noEscape */ $priceRender->render('final_price', $product, ['zone' => \Magento\Framework\Pricing\Render::ZONE_ITEM_LIST]) ?>
+                    <?php endif; ?>
+                    <div class="guest-wishlist-actions">
+                        <?php if ($addToCart): ?>
+                            <button type="button" class="action tocart primary" data-post='<?= /* @noEscape */ $addToCart ?>'>
+                                <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
+                            </button>
+                        <?php elseif ($product->isSaleable()): ?>
+                            <a class="action tocart primary" href="<?= $escaper->escapeUrl($product->getProductUrl()) ?>">
+                                <span><?= $escaper->escapeHtml(__('Choose Options')) ?></span>
+                            </a>
+                        <?php else: ?>
+                            <span class="stock unavailable"><?= $escaper->escapeHtml(__('Out of stock')) ?></span>
+                        <?php endif; ?>
+                        <a href="#" class="action delete" data-post='<?= /* @noEscape */ $viewModel->getRemovePostData($product) ?>'>
+                            <span><?= $escaper->escapeHtml(__('Remove')) ?></span>
+                        </a>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ol>
+    <?php endif; ?>
+</div>

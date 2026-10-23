@@ -1,0 +1,16 @@
+<?php
+/**
+ * "(-20% OFF)" label next to the final price
+ *
+ * @var \Magento\Catalog\Block\Product\View $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$priceInfo = $block->getProduct()->getPriceInfo();
+$regular = (float) $priceInfo->getPrice('regular_price')->getAmount()->getValue();
+$final = (float) $priceInfo->getPrice('final_price')->getAmount()->getValue();
+$percent = $regular > 0 ? (int) round(($regular - $final) / $regular * 100) : 0;
+?>
+<?php if ($percent > 0): ?>
+    <span class="product-discount"><?= $escaper->escapeHtml(__('(-%1% OFF)', $percent)) ?></span>
+<?php endif; ?>

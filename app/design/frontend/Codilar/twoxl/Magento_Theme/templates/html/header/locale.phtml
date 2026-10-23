@@ -1,0 +1,78 @@
+<?php
+/**
+ * Header locale switcher (globe icon dropdown): language + country list
+ *
+ * Countries come from the "countries" layout argument. The one flagged "current" is this store
+ * (ticked, links to the home page); the others link to their own sites.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$countries = $block->getData('countries') ?: [];
+$flags = [
+    // Circular flags: left vertical band + three horizontal stripes
+    'uae'  => ['band' => '#ef3340', 'stripes' => ['#009739', '#ffffff', '#000000']],
+    'oman' => ['band' => '#db161b', 'stripes' => ['#ffffff', '#db161b', '#008000']],
+];
+?>
+<div class="header-icon header-locale">
+    <button type="button"
+            class="header-icon-trigger"
+            title="<?= $escaper->escapeHtmlAttr(__('Language and Country')) ?>"
+            aria-label="<?= $escaper->escapeHtmlAttr(__('Language and Country')) ?>"
+            data-mage-init='{"dropdown":{}}'
+            data-toggle="dropdown"
+            data-trigger-keypress-button="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3Z"/>
+        </svg>
+        <svg class="caret" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none"
+             stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+            <path d="m2 3.5 3 3 3-3"/>
+        </svg>
+    </button>
+    <div class="header-dropdown locale-dropdown" data-target="dropdown" data-mage-init='{"localeDropdown":{}}'>
+        <div class="locale-languages">
+            <span class="locale-language active"><?= $escaper->escapeHtml(__('English')) ?></span>
+        </div>
+        <ul class="locale-countries">
+            <?php foreach ($countries as $code => $country): ?>
+                <?php
+                $isCurrent = !empty($country['current']);
+                $url = $isCurrent ? $block->getUrl('') : ($country['url'] ?? null);
+                $flag = $flags[$code] ?? null;
+                ?>
+                <li class="locale-country<?= $isCurrent ? ' current' : '' ?><?= $url ? '' : ' disabled' ?>">
+                    <?php if ($url): ?>
+                        <a class="locale-country-link" href="<?= $escaper->escapeUrl($url) ?>"<?= $isCurrent ? ' aria-current="true"' : '' ?>>
+                    <?php else: ?>
+                        <span class="locale-country-link" aria-disabled="true">
+                    <?php endif; ?>
+                        <?php if ($flag): ?>
+                            <svg class="locale-flag" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+                                <clipPath id="flag-clip-<?= $escaper->escapeHtmlAttr($code) ?>"><circle cx="11" cy="11" r="11"/></clipPath>
+                                <g clip-path="url(#flag-clip-<?= $escaper->escapeHtmlAttr($code) ?>)">
+                                    <?php foreach ($flag['stripes'] as $i => $color): ?>
+                                        <rect x="0" y="<?= $i * 22 / 3 ?>" width="22" height="<?= 22 / 3 + 0.5 ?>" fill="<?= $escaper->escapeHtmlAttr($color) ?>"/>
+                                    <?php endforeach; ?>
+                                    <rect x="0" y="0" width="7" height="22" fill="<?= $escaper->escapeHtmlAttr($flag['band']) ?>"/>
+                                </g>
+                                <circle cx="11" cy="11" r="10.5" fill="none" stroke="#e1e1e1"/>
+                            </svg>
+                        <?php endif; ?>
+                        <span class="locale-country-name"><?= $escaper->escapeHtml(__($country['label'] ?? $code)) ?></span>
+                        <?php if ($isCurrent): ?>
+                            <svg class="locale-check" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                                <circle cx="8" cy="8" r="8" fill="#2fb344"/>
+                                <path d="m4.5 8.2 2.3 2.3 4.7-4.8" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        <?php endif; ?>
+                    <?= $url ? '</a>' : '</span>' ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>

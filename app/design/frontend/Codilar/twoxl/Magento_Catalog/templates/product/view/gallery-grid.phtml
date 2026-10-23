@@ -1,0 +1,72 @@
+<?php
+/**
+ * Product gallery: stacked grid on desktop (one wide image, then two side by side, repeating),
+ * swipe slider with dots on mobile, click opens a lightbox.
+ *
+ * @var \Magento\Catalog\Block\Product\View\Gallery $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$product = $block->getProduct();
+$images = array_values(iterator_to_array($block->getGalleryImages() ?? []));
+$productName = $product->getName();
+
+// "New Arrival" badge while the product is inside its "Set Product as New" date range
+$today = date('Y-m-d');
+$newFrom = $product->getNewsFromDate() ? substr($product->getNewsFromDate(), 0, 10) : null;
+$newTo = $product->getNewsToDate() ? substr($product->getNewsToDate(), 0, 10) : null;
+$isNew = ($newFrom || $newTo) && (!$newFrom || $newFrom <= $today) && (!$newTo || $newTo >= $today);
+?>
+<div class="pdp-gallery" data-mage-init='{"pdpGallery":{}}'>
+    <?php if ($isNew): ?>
+        <span class="pdp-label"><?= $escaper->escapeHtml(__('New Arrival')) ?></span>
+    <?php endif; ?>
+
+    <div class="pdp-gallery-actions">
+        <button type="button" class="pdp-gallery-action" data-role="pdp-wishlist"
+                aria-label="<?= $escaper->escapeHtmlAttr(__('Add to Wish List')) ?>">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+                <path d="M12 20.5s-8.5-5.1-8.5-11A4.6 4.6 0 0 1 12 6.8a4.6 4.6 0 0 1 8.5 2.7c0 5.9-8.5 11-8.5 11Z"/>
+            </svg>
+        </button>
+        <button type="button" class="pdp-gallery-action" data-role="pdp-share"
+                aria-label="<?= $escaper->escapeHtmlAttr(__('Share')) ?>">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 15V3.5M8 7.5l4-4 4 4M7 11H4.5v9.5h15V11H17"/>
+            </svg>
+        </button>
+    </div>
+
+    <?php if (!$images): ?>
+        <div class="pdp-gallery-grid">
+            <div class="pdp-gallery-item wide">
+                <img src="<?= $escaper->escapeUrl($block->getImage($product, 'product_page_image_large')->getImageUrl()) ?>"
+                     alt="<?= $escaper->escapeHtmlAttr($productName) ?>"/>
+            </div>
+        </div>
+    <?php else: ?>
+        <div class="pdp-gallery-grid" data-role="pdp-gallery-track">
+            <?php foreach ($images as $index => $image): ?>
+                <?php $label = $image->getLabel() ?: $productName; ?>
+                <a class="pdp-gallery-item<?= $index % 3 === 0 ? ' wide' : '' ?>"
+                   href="<?= $escaper->escapeUrl($image->getData('large_image_url')) ?>"
+                   data-role="pdp-gallery-item" data-index="<?= (int) $index ?>">
+                    <img src="<?= $escaper->escapeUrl($image->getData('medium_image_url')) ?>"
+                         alt="<?= $escaper->escapeHtmlAttr($label) ?>"
+                         <?= $index > 0 ? 'loading="lazy"' : 'fetchpriority="high"' ?>/>
+                </a>
+            <?php endforeach; ?>
+        </div>
+
+        <?php if (count($images) > 1): ?>
+            <div class="pdp-gallery-dots" data-role="pdp-gallery-dots">
+                <?php foreach ($images as $index => $image): ?>
+                    <button type="button" class="<?= $index === 0 ? 'active' : '' ?>" data-index="<?= (int) $index ?>"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Image %1', $index + 1)) ?>"></button>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    <?php endif; ?>
+</div>

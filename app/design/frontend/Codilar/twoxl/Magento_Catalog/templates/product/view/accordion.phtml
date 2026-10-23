@@ -1,0 +1,38 @@
+<?php
+/**
+ * Product Description (with attributes) and Shipping and Returns accordions
+ *
+ * @var \Magento\Catalog\Block\Product\View $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$description = $block->getChildHtml('description');
+$attributes = $block->getChildHtml('attributes');
+?>
+<div class="product-accordion">
+    <?php if (trim($description . $attributes)): ?>
+        <div class="product-accordion-item"
+             data-mage-init='{"collapsible":{"openedState":"active","active":true,"animate":{"duration":200}}}'>
+            <h2 class="product-accordion-title" data-role="title" tabindex="0">
+                <?= $escaper->escapeHtml(__('Product Description')) ?>
+            </h2>
+            <div class="product-accordion-content" data-role="content">
+                <?= /* @noEscape */ $description ?>
+                <?= /* @noEscape */ $attributes ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <div class="product-accordion-item"
+         data-mage-init='{"collapsible":{"openedState":"active","active":false,"animate":{"duration":200}}}'>
+        <h2 class="product-accordion-title" data-role="title" tabindex="0">
+            <?= $escaper->escapeHtml(__('Shipping and Returns')) ?>
+        </h2>
+        <div class="product-accordion-content" data-role="content">
+            <p>
+                <?= $escaper->escapeHtml(__('The delivery schedule will depend on the item and the time when you placed the order. The standard delivery for accessories is 2-3 working days and for furniture, it takes 5-7 working days.')) ?>
+                <a href="<?= $escaper->escapeUrl($block->getUrl('shipping-information')) ?>"><strong><?= $escaper->escapeHtml(__('Learn more')) ?></strong></a>
+            </p>
+        </div>
+    </div>
+</div>

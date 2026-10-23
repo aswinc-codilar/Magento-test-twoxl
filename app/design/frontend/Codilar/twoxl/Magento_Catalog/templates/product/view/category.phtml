@@ -1,0 +1,20 @@
+<?php
+/**
+ * Product's most specific category, shown under the title
+ *
+ * @var \Magento\Catalog\Block\Product\View $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$category = $block->getProduct()->getCategoryCollection()
+    ->addAttributeToSelect('name')
+    ->addIsActiveFilter()
+    ->setOrder('level', 'DESC')
+    ->setPageSize(1)
+    ->getFirstItem();
+?>
+<?php if ($category->getId()): ?>
+    <div class="product-category-name">
+        <a href="<?= $escaper->escapeUrl($category->getUrl()) ?>"><?= $escaper->escapeHtml($category->getName()) ?></a>
+    </div>
+<?php endif; ?>

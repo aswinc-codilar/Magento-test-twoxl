@@ -1,0 +1,2962 @@
+//
+//  Codilar 2XL header
+//  _____________________________________________
+
+//  'TwoXL Dirham' only covers U+20C3 (the AED currency symbol), so every other character falls through to Jost
+@twoxl-font: 'TwoXL Dirham', 'Jost', 'Futura', 'Century Gothic', Arial, sans-serif;
+@twoxl-black: #000;
+@twoxl-white: #fff;
+@twoxl-nav-bg: #f5f5f5;
+@twoxl-border: #c6c6c6;
+@twoxl-muted: #8c8c8c;
+@twoxl-header-gutter: 50px;
+@twoxl-header-gutter-mobile: 15px;
+
+//  Luma variable overrides
+@header-panel__background-color: @twoxl-black;
+@header-panel__text-color: @twoxl-white;
+@footer__background-color: @twoxl-white;
+@font-family-name__base: 'TwoXL Dirham', 'Jost';
+
+//
+//  Common
+//  _____________________________________________
+
+& when (@media-common = true) {
+    @font-face {
+        font-display: swap;
+        font-family: 'TwoXL Dirham';
+        font-style: normal;
+        font-weight: 100 900;
+        src: url('../fonts/twoxl-dirham.ttf') format('truetype');
+        unicode-range: U+20C3;
+    }
+
+    .page-header,
+    .nav-sections {
+        font-family: @twoxl-font;
+    }
+
+    //  Top bar
+    .page-header .panel.wrapper {
+        background: @twoxl-black;
+        border: 0;
+        display: block;
+    }
+
+    .page-header .panel.header {
+        display: block;
+        max-width: none;
+        padding: 0;
+    }
+
+    .top-bar {
+        color: @twoxl-white;
+        font-size: 13px;
+        line-height: 1.2;
+    }
+
+    .top-bar-list {
+        .lib-list-reset-styles();
+        align-items: center;
+        display: flex;
+    }
+
+    .top-bar-item {
+        margin: 0;
+
+        a {
+            align-items: center;
+            color: @twoxl-white;
+            display: flex;
+            gap: 6px;
+            text-decoration: none;
+            white-space: nowrap;
+
+            &:hover,
+            &:visited {
+                color: @twoxl-white;
+                text-decoration: none;
+            }
+        }
+
+        svg {
+            flex-shrink: 0;
+        }
+    }
+
+    //  Main header row
+    .page-header {
+        background: @twoxl-white;
+        border-bottom: 1px solid @twoxl-black;
+        margin-bottom: 0;
+
+        .header.content {
+            align-items: center;
+            display: flex;
+            max-width: none;
+
+            &:before,
+            &:after {
+                display: none;
+            }
+        }
+
+        .logo {
+            float: none;
+            line-height: 0;
+            margin: 0;
+            max-width: none;
+            z-index: 1;
+
+            img {
+                display: block;
+            }
+        }
+    }
+
+    //  Search
+    .page-header .block-search {
+        float: none;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        width: auto;
+        z-index: 4;
+
+        .label,
+        .nested {
+            display: none;
+        }
+
+        .control {
+            border: 0;
+            clear: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        input {
+            border: 1px solid @twoxl-border;
+            border-radius: 0;
+            box-shadow: none;
+            font-family: @twoxl-font;
+            font-size: 15px;
+            height: 42px;
+            left: auto;
+            margin: 0;
+            padding: 0 15px 0 50px;
+            position: static;
+
+            &::placeholder {
+                color: @twoxl-muted;
+                font-weight: 300;
+            }
+
+            &:focus {
+                border-color: @twoxl-black;
+                box-shadow: none;
+            }
+        }
+
+        .action.search {
+            background: url('../images/icons/search.svg') no-repeat center / 22px 22px;
+            border: 0;
+            display: block;
+            height: 42px;
+            left: 8px;
+            opacity: 1;
+            padding: 0;
+            position: absolute;
+            right: auto;
+            top: 0;
+            width: 34px;
+
+            &:before {
+                display: none;
+            }
+
+            > span {
+                .lib-visually-hidden();
+            }
+        }
+    }
+
+    //  Header icons
+    .header-icon {
+        position: relative;
+    }
+
+    .header-icon-trigger {
+        align-items: center;
+        background: none;
+        border: 0;
+        box-shadow: none;
+        color: @twoxl-black;
+        cursor: pointer;
+        display: flex;
+        gap: 2px;
+        height: 40px;
+        justify-content: center;
+        padding: 0 4px;
+
+        &:hover,
+        &:focus,
+        &:active,
+        &:visited {
+            background: none;
+            border: 0;
+            box-shadow: none;
+            color: @twoxl-black;
+        }
+
+        .caret {
+            color: @twoxl-muted;
+        }
+    }
+
+    .header-dropdown {
+        .lib-list-reset-styles();
+        background: @twoxl-white;
+        border: 1px solid @twoxl-border;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+        display: none;
+        font-size: 14px;
+        min-width: 180px;
+        padding: 8px 0;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        z-index: 101;
+
+        ul {
+            .lib-list-reset-styles();
+        }
+
+        li {
+            margin: 0;
+        }
+
+        a,
+        .current span,
+        .greet {
+            color: @twoxl-black;
+            display: block;
+            margin: 0;
+            padding: 8px 18px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        a:hover {
+            background: @twoxl-nav-bg;
+            text-decoration: none;
+        }
+
+        .current span,
+        .greet {
+            color: @twoxl-muted;
+        }
+
+        .header.links {
+            display: block;
+            float: none;
+        }
+    }
+
+    .header-icon.active .header-dropdown {
+        display: block;
+    }
+
+    //  Mini cart icon
+    .page-header .minicart-wrapper {
+        float: none;
+        margin: 0;
+
+        .action.showcart {
+            align-items: center;
+            display: flex;
+            height: 40px;
+            justify-content: center;
+            padding: 0 4px;
+            position: relative;
+
+            &:before {
+                background: url('../images/icons/cart.svg') no-repeat center / 24px 24px;
+                content: '';
+                height: 24px;
+                margin: 0;
+                width: 24px;
+            }
+
+            &.active:before {
+                content: '';
+            }
+
+            .counter.qty {
+                background: @twoxl-black;
+                border-radius: 9px;
+                color: @twoxl-white;
+                font-size: 10px;
+                height: 16px;
+                line-height: 16px;
+                margin: 0;
+                min-width: 16px;
+                padding: 0 4px;
+                position: absolute;
+                right: -4px;
+                top: 2px;
+
+                &.empty {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    //  Navigation
+    .nav-sections {
+        background: @twoxl-nav-bg;
+    }
+}
+
+//
+//  Mobile
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .top-bar {
+        font-size: 15px;
+        height: 38px;
+        overflow: hidden;
+    }
+
+    .top-bar-list {
+        height: 38px;
+        justify-content: center;
+    }
+
+    .top-bar-item {
+        display: none;
+
+        &.active {
+            display: block;
+        }
+    }
+
+    .page-header {
+        border-bottom: 0;
+
+        .header.content {
+            flex-wrap: wrap;
+            gap: 0 10px;
+            padding: 6px @twoxl-header-gutter-mobile 10px;
+            position: relative;
+        }
+
+        .logo {
+            left: 50%;
+            position: absolute;
+            top: 6px;
+            transform: translateX(-50%);
+
+            img {
+                height: auto;
+                width: 42px;
+            }
+        }
+
+        .header-locale {
+            order: 2;
+        }
+
+        .header-account {
+            margin-left: auto;
+            order: 3;
+        }
+
+        .minicart-wrapper {
+            order: 4;
+        }
+
+        .header-storelocator {
+            order: 5;
+        }
+
+        .block-search {
+            flex: 0 0 100%;
+            margin-top: 18px;
+            order: 10;
+        }
+    }
+
+    .page-header .header.content .nav-toggle {
+        background: url('../images/icons/menu.svg') no-repeat center / 24px 24px;
+        display: block;
+        height: 40px;
+        left: auto;
+        order: 1;
+        position: static;
+        top: auto;
+        width: 26px;
+
+        &:before {
+            display: none;
+        }
+    }
+
+    .header-icon-trigger {
+        padding: 0 2px;
+    }
+}
+
+//
+//  Desktop
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .top-bar-list {
+        justify-content: flex-end;
+        padding: 12px @twoxl-header-gutter - 20px;
+    }
+
+    .top-bar-item {
+        &:not(:last-child):after {
+            background: @twoxl-white;
+            content: '';
+            height: 22px;
+            margin: 0 12px;
+            width: 2px;
+        }
+
+        display: flex;
+        align-items: center;
+    }
+
+    .page-header {
+        border-bottom: 1px solid @twoxl-black;
+
+        .panel.wrapper {
+            border-bottom: 0;
+        }
+
+        .header.panel {
+            padding: 0;
+        }
+    }
+
+    .page-header .header.content {
+        gap: 18px;
+        min-height: 90px;
+        padding: 6px @twoxl-header-gutter;
+
+        .logo {
+            order: 1;
+        }
+
+        .block-search {
+            flex: 0 1 700px;
+            margin: 0 auto;
+            order: 2;
+        }
+
+        .header-locale {
+            order: 3;
+        }
+
+        .header-account {
+            order: 4;
+        }
+
+        .minicart-wrapper {
+            order: 5;
+        }
+
+        .header-storelocator {
+            order: 6;
+        }
+    }
+
+    .nav-sections {
+        margin-bottom: 25px;
+    }
+
+    .navigation {
+        background: @twoxl-nav-bg;
+        font-weight: 400;
+        max-width: none;
+
+        > ul {
+            display: flex;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .level0 {
+            margin: 0;
+
+            > .level-top {
+                border: 0;
+                color: @twoxl-black;
+                font-size: 15px;
+                letter-spacing: .2px;
+                line-height: 42px;
+                padding: 0 12px;
+                text-transform: uppercase;
+
+                &:hover,
+                &.ui-state-focus {
+                    color: @twoxl-black;
+                    text-decoration: none;
+                }
+            }
+
+            //  No underline on the current page's category (Luma adds one)...
+            &.active,
+            &.has-active,
+            &:hover {
+                > .level-top {
+                    border: 0;
+                    color: @twoxl-black;
+                }
+            }
+
+            //  ...but underline the item whose mega menu is open. The panel is inside the <li>, so it stays
+            //  underlined while hovering / scrolling the panel. Drawn under the text only, without moving layout.
+            &:hover > .level-top,
+            > .level-top.ui-state-active {
+                background: linear-gradient(@twoxl-black, @twoxl-black) no-repeat center bottom / calc(100% - 24px) 2px;
+            }
+
+            .submenu {
+                border-color: @twoxl-border;
+                font-weight: 400;
+                text-transform: none;
+
+                a {
+                    color: @twoxl-black;
+                }
+            }
+        }
+    }
+}
+
+//
+//  Codilar 2XL footer
+//  _____________________________________________
+
+@twoxl-footer-text: #25282a;
+@twoxl-footer-line: #5a5a5a;
+@twoxl-footer-separator: #b8916a;
+
+& when (@media-common = true) {
+    .page-footer {
+        background: @twoxl-white;
+        color: @twoxl-footer-text;
+        font-family: @twoxl-font;
+        margin-top: 40px;
+        padding-bottom: 30px;
+
+        .footer.content {
+            border-top: 0;
+            margin: 0;
+            max-width: none;
+            padding: 0;
+        }
+
+        .copyright {
+            background: none;
+            color: @twoxl-footer-text;
+            display: block;
+            font-size: 15px;
+            padding: 0 20px;
+            text-align: center;
+        }
+    }
+
+    .twoxl-footer {
+        display: flex;
+        flex-direction: column;
+
+        a,
+        a:visited {
+            color: @twoxl-footer-text;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: @twoxl-black;
+            text-decoration: underline;
+        }
+    }
+
+    .footer-line {
+        border-top: 1px solid @twoxl-footer-line;
+    }
+
+    .footer-heading {
+        font-family: @twoxl-font;
+        font-weight: 400;
+        margin: 0;
+        text-transform: uppercase;
+    }
+
+    .footer-links {
+        .lib-list-reset-styles();
+        font-weight: 300;
+        text-transform: uppercase;
+
+        li {
+            margin: 0;
+        }
+    }
+
+    //  Newsletter
+    .page-footer .block.footer-newsletter-form {
+        margin: 0;
+        max-width: none;
+        width: 100%;
+
+        .form.subscribe {
+            display: block;
+            width: 100%;
+        }
+
+        .field.newsletter {
+            margin: 0;
+            max-width: none;
+            width: 100%;
+
+            .control {
+                width: 100%;
+            }
+
+            .label {
+                .lib-visually-hidden();
+            }
+
+            .control:before {
+                display: none;
+            }
+
+            input {
+                background: transparent;
+                border: 0;
+                border-bottom: 1px solid #d9d9d9;
+                border-radius: 0;
+                font-family: @twoxl-font;
+                font-size: 14px;
+                height: 48px;
+                padding: 0 10px;
+
+                &::placeholder {
+                    color: #b5b5b5;
+                    font-weight: 300;
+                }
+
+                &:focus {
+                    border-bottom-color: @twoxl-black;
+                    box-shadow: none;
+                }
+            }
+        }
+
+        .actions {
+            display: block;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .action.subscribe {
+            background: #d6d6d6;
+            border: 1px solid #c4c4c4;
+            border-radius: 0;
+            color: @twoxl-black;
+            font-family: @twoxl-font;
+            font-size: 18px;
+            font-weight: 400;
+            height: 40px;
+            margin: 0;
+            padding: 0 20px;
+            text-transform: uppercase;
+            width: 100%;
+
+            &:hover {
+                background: @twoxl-black;
+                border-color: @twoxl-black;
+                color: @twoxl-white;
+            }
+        }
+    }
+
+    //  Social icons
+    .footer-social-title {
+        text-transform: uppercase;
+    }
+
+    .footer-social-icons {
+        display: flex;
+        gap: 20px;
+
+        a {
+            line-height: 0;
+        }
+
+        svg {
+            fill: @twoxl-black;
+        }
+
+        a:hover svg circle {
+            fill: #444;
+        }
+    }
+
+    //  Popular searches
+    .footer-popular-title {
+        display: block;
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+    }
+
+    .footer-popular-links {
+        font-size: 15px;
+        line-height: 1.9;
+        margin: 0;
+
+        a + a:before {
+            color: @twoxl-footer-separator;
+            content: '|';
+            display: inline-block;
+            margin: 0 8px;
+            text-decoration: none;
+        }
+    }
+
+    //  WhatsApp
+    .whatsapp-button {
+        align-items: center;
+        background: @twoxl-white;
+        border-radius: 50%;
+        bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .25);
+        display: flex;
+        height: 50px;
+        justify-content: center;
+        position: fixed;
+        right: 23px;
+        width: 50px;
+        z-index: 99;
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .page-footer {
+        margin-top: 30px;
+    }
+
+    .footer-social {
+        order: -1;
+        padding: 0 20px 40px;
+    }
+
+    .footer-social-title {
+        display: block;
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+
+    .footer-social-icons {
+        gap: 0;
+        justify-content: space-around;
+        padding: 0 20px;
+
+        svg {
+            height: 24px;
+            width: 24px;
+        }
+    }
+
+    .footer-line {
+        margin: 0 4px 20px;
+    }
+
+    .footer-columns {
+        padding: 0 20px;
+    }
+
+    .footer-column {
+        padding: 13px 0;
+    }
+
+    .footer-heading {
+        align-items: center;
+        cursor: pointer;
+        display: flex;
+        font-size: 14px;
+        justify-content: space-between;
+
+        &:after {
+            content: '+';
+            font-size: 16px;
+        }
+    }
+
+    .footer-column.active .footer-heading:after {
+        content: '\2212';
+    }
+
+    .footer-links {
+        display: none;
+        font-size: 13px;
+        padding-top: 12px;
+
+        li {
+            padding: 6px 0;
+        }
+
+        .hide-on-mobile {
+            display: none;
+        }
+    }
+
+    .footer-column.active .footer-links {
+        display: block;
+    }
+
+    .footer-blog-mobile a {
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+
+    .footer-popular {
+        padding: 10px 20px 30px;
+    }
+
+    .footer-popular-title {
+        font-size: 15px;
+        font-weight: 400;
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .footer-line {
+        margin: 0 40px 40px;
+    }
+
+    .footer-columns {
+        display: grid;
+        gap: 40px 30px;
+        grid-template-columns: repeat(4, max-content) minmax(260px, 320px);
+        justify-content: space-between;
+        padding: 0 40px 0 22px;
+
+        @media (max-width: 1199px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    .footer-heading {
+        font-size: 20px;
+        margin-bottom: 30px;
+    }
+
+    .footer-links {
+        font-size: 15px;
+        line-height: 34px;
+    }
+
+    .footer-newsletter .footer-links {
+        margin-top: -30px;
+    }
+
+    .footer-blog-mobile,
+    .footer-social-title {
+        display: none;
+    }
+
+    .footer-social {
+        display: flex;
+        justify-content: flex-end;
+        padding: 30px 40px 50px;
+    }
+
+    .footer-popular {
+        padding: 30px 30px 90px;
+    }
+}
+
+//
+//  Codilar 2XL product page
+//  _____________________________________________
+
+@twoxl-sale: #d0021b;
+@twoxl-pdp-gutter: 45px;
+
+& when (@media-common = true) {
+    .catalog-product-view {
+        .breadcrumbs {
+            font-size: 16px;
+            margin: 10px 0 25px;
+            max-width: none;
+
+            .items {
+                color: @twoxl-black;
+                font-size: 16px;
+            }
+
+            a,
+            a:visited {
+                color: @twoxl-black;
+            }
+
+            strong {
+                font-weight: 500;
+            }
+
+            .item:not(:last-child):after {
+                color: @twoxl-black;
+                content: '/';
+                font-family: @twoxl-font;
+                font-size: 16px;
+                line-height: inherit;
+                margin: 0 5px;
+            }
+        }
+
+        .page-main {
+            max-width: none;
+        }
+
+        .column.main {
+            padding-bottom: 20px;
+        }
+    }
+
+    //  Gallery
+    .pdp-gallery {
+        position: relative;
+    }
+
+    .pdp-gallery-grid {
+        display: grid;
+        gap: 5px;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .pdp-gallery-item {
+        background: #f2f2f2;
+        cursor: zoom-in;
+        display: block;
+        overflow: hidden;
+
+        &.wide {
+            grid-column: span 2;
+        }
+
+        img {
+            aspect-ratio: 1 / 1;
+            display: block;
+            height: 100%;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        &.wide img {
+            aspect-ratio: 726 / 595;
+        }
+    }
+
+    .pdp-label {
+        background: #4a3a38;
+        border-radius: 4px;
+        color: @twoxl-white;
+        font-size: 12px;
+        font-weight: 500;
+        left: auto;
+        padding: 2px 8px;
+        position: absolute;
+        right: 12px;
+        top: 20px;
+        z-index: 2;
+    }
+
+    .pdp-gallery-actions {
+        display: none;
+    }
+
+    .pdp-gallery-dots {
+        display: none;
+    }
+
+    .pdp-lightbox {
+        align-items: center;
+        background: rgba(255, 255, 255, .97);
+        display: none;
+        inset: 0;
+        justify-content: center;
+        position: fixed;
+        z-index: 1000;
+
+        &.active {
+            display: flex;
+        }
+
+        img {
+            max-height: 90vh;
+            max-width: 90vw;
+            object-fit: contain;
+        }
+
+        button {
+            background: none;
+            border: 0;
+            box-shadow: none;
+            color: @twoxl-black;
+            font-size: 48px;
+            font-weight: 300;
+            line-height: 1;
+            padding: 10px 20px;
+            position: absolute;
+
+            &:hover,
+            &:focus {
+                background: none;
+                border: 0;
+                color: @twoxl-black;
+            }
+        }
+
+        .pdp-lightbox-close {
+            right: 10px;
+            top: 10px;
+        }
+
+        .pdp-lightbox-prev {
+            left: 10px;
+        }
+
+        .pdp-lightbox-next {
+            right: 10px;
+        }
+
+        &.single .pdp-lightbox-prev,
+        &.single .pdp-lightbox-next {
+            display: none;
+        }
+    }
+
+    .pdp-lightbox-open {
+        overflow: hidden;
+    }
+
+    //  Product info
+    .catalog-product-view .product-info-main {
+        color: @twoxl-black;
+        font-family: @twoxl-font;
+
+        .product-title-row {
+            align-items: flex-start;
+            display: flex;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .page-title-wrapper.product .page-title {
+            font-family: @twoxl-font;
+            font-size: 30px;
+            font-weight: 400;
+            letter-spacing: 1.5px;
+            line-height: 1.2;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .action.towishlist {
+            color: @twoxl-black;
+            flex-shrink: 0;
+            height: 28px;
+            margin-top: 4px;
+            width: 28px;
+
+            &:before {
+                background: url('../images/icons/heart.svg') no-repeat center / 26px 26px;
+                content: '';
+                display: block;
+                height: 28px;
+                width: 28px;
+            }
+
+            span {
+                .lib-visually-hidden();
+            }
+        }
+
+        .product-info-meta {
+            align-items: flex-start;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 20px;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+
+        .product-category-name {
+            font-size: 13px;
+            text-transform: uppercase;
+
+            a,
+            a:visited {
+                color: @twoxl-black;
+            }
+        }
+
+        .product-reviews-summary {
+            margin: 0 0 0 auto;
+
+            .rating-summary {
+                vertical-align: middle;
+            }
+
+            .reviews-actions {
+                font-size: 15px;
+                margin: 0;
+
+                a,
+                a:visited {
+                    color: @twoxl-black;
+                    font-weight: 500;
+                    margin: 0;
+                }
+            }
+
+            &.empty {
+                margin-left: auto;
+            }
+        }
+
+        .product-info-stock-sku {
+            display: block;
+            float: none;
+            font-size: 13px;
+            margin-top: 6px;
+            padding: 0;
+            text-align: left;
+
+            .stock.available {
+                display: none;
+            }
+
+            .stock.unavailable {
+                color: @twoxl-sale;
+                font-weight: 500;
+                margin-bottom: 4px;
+                text-transform: uppercase;
+            }
+
+            .product.attribute.sku {
+                display: flex;
+                gap: 6px;
+
+                .type {
+                    font-weight: 400;
+                    margin: 0;
+
+                    &:after {
+                        content: ':';
+                    }
+                }
+            }
+        }
+
+        //  Price
+        .product-info-price {
+            align-items: flex-end;
+            border: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 35px 0 0;
+            padding: 0;
+            width: auto;
+        }
+
+        .price-box {
+            display: flex;
+            flex-direction: column-reverse;
+            margin: 0;
+            padding: 0;
+            width: auto;
+
+            .price-container > .price-label {
+                display: none;
+            }
+
+            .price-container > .price-wrapper {
+                display: block;
+                margin: 0;
+            }
+
+            .price-wrapper .price {
+                color: @twoxl-black;
+                font-family: @twoxl-font;
+                font-size: 28px;
+                font-weight: 400;
+                line-height: 1.1;
+            }
+
+            .special-price {
+                margin: 0;
+            }
+
+            .old-price {
+                margin: 0 0 4px;
+
+                .price-wrapper .price {
+                    color: @twoxl-muted;
+                    font-size: 16px;
+                    text-decoration: line-through;
+                }
+            }
+        }
+
+        .product-discount {
+            color: @twoxl-sale;
+            font-size: 16px;
+            padding-bottom: 2px;
+        }
+
+        //  Add to cart
+        .product-add-form {
+            padding-top: 25px;
+        }
+
+        .box-tocart {
+            margin: 0;
+
+            //  Row 1: "Quantity" label; row 2: stepper | button (same height, top-aligned)
+            .fieldset {
+                align-items: stretch;
+                display: grid;
+                gap: 0 6px;
+                grid-template-columns: 1fr 1fr;
+                margin: 0;
+                width: 100%;
+            }
+
+            .field.qty {
+                display: contents;
+            }
+
+            .field.qty .label {
+                font-size: 16px;
+                font-weight: 400;
+                grid-column: 1 / -1;
+                margin: 0 0 12px;
+                text-transform: uppercase;
+            }
+
+            .actions {
+                display: block;
+                grid-column: 2;
+                grid-row: 2;
+                margin: 0;
+                padding: 0;
+                text-align: left;
+                width: auto;
+            }
+
+            .action.tocart {
+                background: @twoxl-black;
+                border: 1px solid @twoxl-black;
+                border-radius: 0;
+                box-sizing: border-box;
+                font-family: @twoxl-font;
+                font-size: 15px;
+                font-weight: 400;
+                height: 50px;
+                line-height: 1;
+                margin: 0;
+                padding: 0 20px;
+                text-transform: uppercase;
+                width: 100%;
+
+                &:hover {
+                    background: #333;
+                    border-color: #333;
+                }
+            }
+        }
+
+        .qty-stepper {
+            align-items: center;
+            border: 1px solid @twoxl-black;
+            box-sizing: border-box;
+            display: flex;
+            grid-column: 1;
+            grid-row: 2;
+            height: 50px;
+            justify-content: center;
+            margin: 0;
+            position: relative;
+
+            .qty-step {
+                background: none;
+                border: 0;
+                box-shadow: none;
+                color: @twoxl-black;
+                font-family: @twoxl-font;
+                font-size: 22px;
+                font-weight: 300;
+                height: 48px;
+                padding: 0 18px;
+
+                &:hover,
+                &:focus {
+                    background: none;
+                    border: 0;
+                }
+            }
+
+            input.qty {
+                -moz-appearance: textfield;
+                border: 0;
+                box-shadow: none;
+                font-family: @twoxl-font;
+                font-size: 18px;
+                height: 48px;
+                margin: 0;
+                padding: 0;
+                text-align: center;
+                width: 44px;
+
+                &::-webkit-outer-spin-button,
+                &::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+            }
+
+            div.mage-error {
+                left: 0;
+                position: absolute;
+                top: 100%;
+            }
+        }
+
+        //  Tabby / Tamara installment boxes
+        //  Sougha reward points (30px under Add to Cart; the form already adds 10px)
+        .product-rewards {
+            align-items: center;
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            min-height: 68px;
+        }
+
+        .product-rewards-logo {
+            flex-shrink: 0;
+        }
+
+        .product-rewards-text {
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .product-rewards-help {
+            color: #555;
+            cursor: help;
+            display: inline-flex;
+        }
+
+        .product-installments {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 10px;
+            max-width: 397px;
+        }
+
+        .installment-box {
+            align-items: flex-start;
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+            padding: 14px 16px;
+        }
+
+        .installment-text {
+            font-size: 15px;
+            line-height: 1.4;
+            margin: 0;
+
+            strong {
+                font-weight: 500;
+            }
+        }
+
+        .installment-link {
+            color: #1d5bd6;
+            display: block;
+            font-weight: 500;
+        }
+
+        .installment-more {
+            color: @twoxl-black;
+            text-decoration: underline;
+        }
+
+        .installment-logo {
+            border-radius: 6px;
+            color: #000;
+            flex-shrink: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -.3px;
+            line-height: 1;
+            padding: 6px 8px 7px;
+        }
+
+        .tabby-logo {
+            background: #3effa0;
+        }
+
+        .tamara-logo {
+            background: linear-gradient(90deg, #f9c7a3 0%, #f79fc0 45%, #c49bf0 75%, #8bc4f8 100%);
+            margin-top: 8px;
+            padding: 8px 12px;
+        }
+
+        //  Warehouse
+        .product-warehouse {
+            align-items: flex-start;
+            display: flex;
+            gap: 25px;
+            margin: 16px 0 10px;
+
+            svg {
+                flex-shrink: 0;
+                margin-top: 18px;
+            }
+        }
+
+        .product-warehouse-title {
+            display: block;
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .product-warehouse-content p {
+            font-size: 13px;
+            margin: 0;
+
+            a {
+                color: #5bcdf7;
+                margin-left: 8px;
+                text-decoration: underline;
+            }
+        }
+
+        //  Accordions
+        .product-accordion {
+            margin-top: 30px;
+        }
+
+        .product-accordion-item {
+            border-bottom: 2px solid @twoxl-black;
+        }
+
+        .product-accordion-title {
+            align-items: center;
+            cursor: pointer;
+            display: flex;
+            font-family: @twoxl-font;
+            font-size: 18px;
+            font-weight: 400;
+            justify-content: space-between;
+            margin: 0;
+            padding: 35px 10px 35px 0;
+            text-transform: uppercase;
+
+            &:after {
+                content: '+';
+                font-size: 20px;
+                font-weight: 300;
+            }
+        }
+
+        .product-accordion-item.active .product-accordion-title:after {
+            content: '\2212';
+        }
+
+        .product-accordion-content {
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 1.3;
+            padding: 0 10px 25px;
+
+            p {
+                margin-bottom: 12px;
+            }
+
+            ul {
+                margin: 0 0 15px;
+                padding-left: 10px;
+            }
+
+            li {
+                margin-bottom: 2px;
+            }
+
+            a {
+                color: @twoxl-black;
+            }
+        }
+
+        .product-attributes-grid {
+            display: grid;
+            gap: 10px 30px;
+            grid-template-columns: 1fr 1fr;
+            margin: 20px 0 0;
+
+            dt {
+                font-weight: 500;
+                margin: 0 0 4px;
+                text-transform: uppercase;
+            }
+
+            dd {
+                margin: 0;
+            }
+        }
+
+        //  Feature icons
+        .product-features {
+            .lib-list-reset-styles();
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(4, 1fr);
+            margin: 25px 0 0;
+            text-align: center;
+        }
+
+        .product-feature {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        .product-feature-icon {
+            align-items: center;
+            border: 1px solid @twoxl-black;
+            border-radius: 50%;
+            display: flex;
+            height: 88px;
+            justify-content: center;
+            margin-bottom: 15px;
+            width: 88px;
+        }
+
+        .product-feature-title {
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.2;
+            max-width: 110px;
+            text-transform: uppercase;
+        }
+
+        .product-feature-text {
+            color: #6b6b6b;
+            font-size: 8px;
+            line-height: 1.3;
+            margin-top: 3px;
+            max-width: 90px;
+            text-transform: uppercase;
+        }
+    }
+
+    //  Reviews tab under the product
+    .catalog-product-view .product.info.detailed {
+        clear: both;
+        font-family: @twoxl-font;
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .catalog-product-view {
+        .breadcrumbs {
+            display: block;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .page-main {
+            padding: 0;
+        }
+
+        .column.main {
+            padding: 0;
+        }
+
+        .product-info-main,
+        .product.info.detailed,
+        .block.related,
+        .block.upsell {
+            padding: 0 15px;
+        }
+    }
+
+    //  Gallery becomes a swipe slider
+    .pdp-gallery-grid {
+        display: flex;
+        gap: 0;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .pdp-gallery-item {
+        flex: 0 0 100%;
+        scroll-snap-align: start;
+
+        img,
+        &.wide img {
+            aspect-ratio: 1 / 1.08;
+        }
+    }
+
+    .pdp-label {
+        left: 10px;
+        right: auto;
+        top: 10px;
+    }
+
+    .pdp-gallery-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        position: absolute;
+        right: 14px;
+        top: 14px;
+        z-index: 2;
+    }
+
+    .pdp-gallery-action {
+        background: none;
+        border: 0;
+        box-shadow: none;
+        color: @twoxl-black;
+        line-height: 0;
+        padding: 0;
+
+        &:hover,
+        &:focus {
+            background: none;
+            border: 0;
+            color: @twoxl-black;
+        }
+    }
+
+    .pdp-gallery-dots {
+        bottom: 12px;
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        left: 0;
+        position: absolute;
+        right: 0;
+
+        button {
+            background: #c9c9c9;
+            border: 0;
+            border-radius: 50%;
+            box-shadow: none;
+            height: 6px;
+            padding: 0;
+            width: 6px;
+
+            &.active {
+                background: #6b6b6b;
+            }
+        }
+    }
+
+    .catalog-product-view .product-info-main {
+        margin-top: 15px;
+
+        .page-title-wrapper.product .page-title {
+            font-size: 22px;
+        }
+
+        .product-title-row .action.towishlist {
+            display: none;
+        }
+
+        .product-info-price {
+            margin-top: 25px;
+        }
+
+        .product-rewards {
+            margin-top: 10px;
+        }
+
+        .product-installments {
+            max-width: none;
+        }
+
+        .installment-text {
+            font-size: 15px;
+        }
+
+        .product-accordion-title {
+            font-size: 16px;
+            padding: 25px 5px 25px 0;
+        }
+
+        .product-attributes-grid {
+            gap: 10px 15px;
+        }
+
+        .product-features {
+            gap: 6px;
+        }
+
+        .product-feature-icon {
+            height: 64px;
+            width: 64px;
+
+            svg {
+                height: 26px;
+                width: 26px;
+            }
+        }
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .catalog-product-view {
+        .breadcrumbs,
+        .page-main {
+            padding-left: @twoxl-pdp-gutter - 5px;
+            padding-right: @twoxl-pdp-gutter - 5px;
+        }
+
+        .product.media {
+            margin-left: 10px;
+            width: 52%;
+        }
+
+        .product-info-main {
+            padding-top: 21px;
+            width: 41.5%;
+        }
+    }
+}
+
+//
+//  Codilar 2XL sticky header
+//  _____________________________________________
+//  The whole header (black top bar + logo/search row, and the menu bar on desktop) stays pinned.
+//  js/sticky-header.js sets the real header height as a CSS variable; the fallback matches the default design.
+
+& when (@media-common = true) {
+    .page-header {
+        position: sticky;
+        top: 0;
+        transition: box-shadow .2s ease;
+        z-index: 100;
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .header-stuck .page-header {
+        box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .nav-sections {
+        position: sticky;
+        top: var(--twoxl-header-height, 127px);
+        transition: box-shadow .2s ease;
+        z-index: 99;
+    }
+
+    .header-stuck .nav-sections {
+        box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+    }
+}
+
+//
+//  Codilar 2XL locale dropdown (globe icon)
+//  _____________________________________________
+
+& when (@media-common = true) {
+    .header-dropdown.locale-dropdown {
+        min-width: 280px;
+        padding: 12px 0 10px;
+    }
+
+    .locale-languages {
+        display: flex;
+        gap: 10px;
+        padding: 0 20px 10px 40px;
+    }
+
+    .locale-language {
+        border-radius: 3px;
+        font-size: 16px;
+        padding: 7px 30px;
+
+        &.active {
+            background: @twoxl-black;
+            color: @twoxl-white;
+        }
+    }
+
+    .header-dropdown .locale-countries {
+        .lib-list-reset-styles();
+
+        .locale-country-link {
+            align-items: center;
+            display: flex;
+            font-size: 16px;
+            gap: 14px;
+            padding: 10px 20px;
+            text-transform: uppercase;
+        }
+    }
+
+    .locale-country.disabled .locale-country-link {
+        cursor: default;
+    }
+
+    .locale-flag {
+        flex-shrink: 0;
+    }
+
+    .locale-check {
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+}
+
+& when (@media-common = true) {
+    .header-dropdown .locale-country .locale-country-name {
+        color: @twoxl-black;
+        display: inline;
+        padding: 0;
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    //  The globe sits on the left on mobile, so open the dropdown towards the right
+    .header-locale .header-dropdown.locale-dropdown {
+        left: 0;
+        right: auto;
+    }
+}
+
+//
+//  Codilar 2XL Tabby / Tamara popups
+//  _____________________________________________
+
+@twoxl-provider-font: 'TwoXL Dirham', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+& when (@media-common = true) {
+    .catalog-product-view .product-info-main .installment-box {
+        cursor: pointer;
+
+        &:hover,
+        &:focus-visible {
+            border-color: #b9b9b9;
+        }
+
+        .installment-link,
+        .installment-more {
+            cursor: pointer;
+        }
+    }
+
+    .installment-modal-open {
+        overflow: hidden;
+    }
+
+    .installment-modal {
+        align-items: flex-start;
+        background: rgba(0, 0, 0, .5);
+        display: flex;
+        font-family: @twoxl-provider-font;
+        inset: 0;
+        justify-content: center;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: 16px;
+        position: fixed;
+        z-index: 1000;
+
+        &[hidden] {
+            display: none;
+        }
+
+        ul,
+        ol {
+            .lib-list-reset-styles();
+        }
+
+        li {
+            margin: 0;
+        }
+    }
+
+    //  Like on 2xlhome.com the whole backdrop scrolls (scrollbar at the right edge of the window)
+    //  and the panel keeps its full height, instead of scrolling inside the panel
+    .installment-modal-panel {
+        box-sizing: border-box;
+        flex-shrink: 0;
+        outline: none;
+        position: relative;
+        width: 100%;
+    }
+
+    .installment-modal-close {
+        align-items: center;
+        background: none;
+        border: 0;
+        box-shadow: none;
+        color: #1d1d1b;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        padding: 0;
+
+        &:hover,
+        &:focus {
+            background: none;
+            border: 0;
+            color: #1d1d1b;
+        }
+    }
+
+    .installment-modal-title {
+        font-family: @twoxl-provider-font;
+        margin: 0;
+    }
+
+    //  Tabby
+    .installment-modal-tabby {
+        .installment-modal-panel {
+            background: #f4f2ef;
+            border-radius: 24px;
+            color: #1d1d1b;
+            max-width: 440px;
+            padding: 0 16px 16px;
+        }
+
+        .installment-modal-header {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 8px 16px;
+        }
+
+        .installment-modal-close {
+            height: 36px;
+            width: 36px;
+        }
+
+        .installment-modal-title {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -.5px;
+            line-height: 1.2;
+            margin-top: 24px;
+        }
+
+        .installment-modal-subtitle {
+            font-size: 15px;
+            margin: 6px 0 28px;
+        }
+    }
+
+    .tabby-wordmark {
+        font-family: 'Arial Black', @twoxl-provider-font;
+        font-size: 30px;
+        font-weight: 900;
+        letter-spacing: -1.2px;
+        line-height: 1;
+    }
+
+    .tabby-hero {
+        align-items: center;
+        background: #6aa9ff;
+        border-radius: 20px;
+        display: flex;
+        height: 232px;
+        justify-content: center;
+    }
+
+    .tabby-plans {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .tabby-plan {
+        background: #fff;
+        border-radius: 24px;
+        padding: 20px;
+    }
+
+    .tabby-plan-row {
+        display: flex;
+        font-size: 15px;
+        justify-content: space-between;
+    }
+
+    .tabby-plan-note {
+        color: #6b6b6b;
+        font-size: 14px;
+        margin: 4px 0 0;
+
+        &.free {
+            color: #2e8b3a;
+        }
+    }
+
+    .tabby-how {
+        background: #fff;
+        border-radius: 24px;
+        margin-top: 16px;
+        padding: 24px 20px;
+
+        h3 {
+            font-family: @twoxl-provider-font;
+            font-size: 20px;
+            font-weight: 800;
+            margin: 0 0 18px;
+        }
+
+        ol {
+            counter-reset: tabby-step;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        li {
+            align-items: center;
+            counter-increment: tabby-step;
+            display: flex;
+            font-size: 15px;
+            gap: 14px;
+
+            &:before {
+                align-items: center;
+                border: 1px solid #d6d3cf;
+                border-radius: 50%;
+                content: counter(tabby-step);
+                display: flex;
+                flex-shrink: 0;
+                font-weight: 700;
+                height: 32px;
+                justify-content: center;
+                width: 32px;
+            }
+        }
+    }
+
+    //  Tamara
+    .installment-modal-tamara {
+        padding-bottom: 45px;
+        padding-top: 45px;
+
+        .installment-modal-panel {
+            background: #fff;
+            border-radius: 32px;
+            color: #1f1f1f;
+            max-width: 594px;
+            overflow: hidden; // keeps the full-width "Why Tamara?" band inside the rounded corners
+            padding: 48px 24px 24px;
+            text-align: center;
+        }
+
+        .installment-modal-close {
+            background: #f1f1f3;
+            border-radius: 50%;
+            height: 32px;
+            position: absolute;
+            right: 24px;
+            top: 24px;
+            width: 32px;
+
+            &:hover,
+            &:focus {
+                background: #e6e6ea;
+            }
+        }
+
+        .installment-modal-title {
+            color: #1e1b3a;
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1.8px;
+            line-height: 1.05;
+            margin-top: 28px;
+        }
+
+        .installment-modal-subtitle {
+            color: #3c3c3c;
+            font-size: 17px;
+            margin: 18px 0 0;
+
+            strong {
+                font-weight: 600;
+            }
+        }
+    }
+
+    //  The popups live outside .product-info-main, so the logo badge styles are repeated here
+    .installment-modal .tamara-modal-logo {
+        background: linear-gradient(90deg, #f9c7a3 0%, #f79fc0 45%, #c49bf0 75%, #8bc4f8 100%);
+        border-radius: 6px;
+        color: #000;
+        display: inline-block;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -.3px;
+        line-height: 1;
+        margin: 0;
+        padding: 6px 10px 7px;
+    }
+
+    .tamara-plans-title {
+        font-size: 17px;
+        margin: 48px 0 12px;
+    }
+
+    .tamara-plans {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        text-align: left;
+    }
+
+    .tamara-plan {
+        align-items: center;
+        border: 1px solid #e3e3e8;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        padding: 16px;
+
+        strong {
+            display: block;
+            font-size: 18px;
+            font-weight: 700;
+        }
+    }
+
+    .tamara-plan-note {
+        color: #7a7a7a;
+        display: block;
+        font-size: 15px;
+        margin-top: 4px;
+
+        &.free {
+            color: #13868f;
+        }
+    }
+
+    .tamara-plan-badge {
+        background: #f6edff;
+        border-radius: 6px;
+        color: #8a2be2;
+        flex-shrink: 0;
+        font-size: 13px;
+        padding: 4px 8px;
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    //  Both popups fill the screen on mobile
+    .installment-modal,
+    .installment-modal-tamara {
+        padding: 0;
+    }
+
+    .installment-modal-panel,
+    .installment-modal-tabby .installment-modal-panel,
+    .installment-modal-tamara .installment-modal-panel {
+        border-radius: 0;
+        max-width: none;
+        min-height: 100%;
+    }
+
+    .installment-modal-tamara {
+        .installment-modal-panel {
+            padding-top: 64px;
+        }
+
+        .installment-modal-title {
+            font-size: 34px;
+        }
+    }
+}
+
+//  Popup lower sections (Tabby info cards + button, Tamara how it works / why Tamara)
+& when (@media-common = true) {
+    .installment-payment-logos {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        padding: 24px 0 8px;
+    }
+
+    .installment-payment-logo {
+        background: #fff;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        display: inline-flex;
+        height: 26px;
+        width: 40px;
+
+        svg {
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    //  Tabby
+    .tabby-feature {
+        align-items: flex-start;
+        background: #fff;
+        border-radius: 24px;
+        display: flex;
+        gap: 18px;
+        margin-top: 16px;
+        padding: 22px 20px;
+
+        strong {
+            display: block;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        p {
+            color: #6b6b6b;
+            font-size: 15px;
+            line-height: 1.35;
+            margin: 2px 0 0;
+        }
+    }
+
+    .tabby-feature-icon {
+        align-items: center;
+        background: #eaf0ff;
+        border-radius: 50%;
+        display: flex;
+        flex-shrink: 0;
+        height: 40px;
+        justify-content: center;
+        width: 40px;
+    }
+
+    .installment-modal .tabby-continue {
+        background: #1d1d1b;
+        border: 0;
+        border-radius: 16px;
+        box-shadow: none;
+        color: #fff;
+        cursor: pointer;
+        font-family: @twoxl-provider-font;
+        font-size: 16px;
+        font-weight: 700;
+        height: 58px;
+        margin-top: 28px;
+        width: 100%;
+
+        &:hover,
+        &:focus {
+            background: #000;
+            border: 0;
+            color: #fff;
+        }
+    }
+
+    //  Tamara
+    .tamara-how {
+        border: 1px solid #e3e3e8;
+        border-radius: 12px;
+        margin-top: 32px;
+        padding: 24px;
+        text-align: left;
+
+        h3 {
+            font-family: @twoxl-provider-font;
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 20px;
+        }
+
+        ol {
+            counter-reset: tamara-step;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        li {
+            counter-increment: tamara-step;
+            padding-left: 42px;
+            position: relative;
+
+            &:before {
+                align-items: center;
+                border: 1px solid #d6d6dc;
+                border-radius: 50%;
+                color: #555;
+                content: counter(tamara-step);
+                display: flex;
+                font-size: 13px;
+                height: 24px;
+                justify-content: center;
+                left: 0;
+                position: absolute;
+                top: 2px;
+                width: 24px;
+            }
+        }
+
+        strong {
+            display: block;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        p {
+            color: #4b4a6b;
+            font-size: 15px;
+            line-height: 1.3;
+            margin: 6px 0 0;
+        }
+    }
+
+    .tamara-why {
+        background: #f5f5fe;
+        margin: 24px -24px -24px;
+        padding: 32px 24px 24px;
+
+        h3 {
+            font-family: @twoxl-provider-font;
+            font-size: 22px;
+            font-weight: 400;
+            margin: 0 0 32px;
+        }
+    }
+
+    .tamara-why-items {
+        border-bottom: 1px solid #e3e3e8;
+        border-top: 1px solid #e9e9f2;
+        display: flex;
+        justify-content: space-around;
+        padding: 24px 0;
+    }
+
+    .tamara-why-item {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        font-size: 15px;
+        gap: 10px;
+        line-height: 1.45;
+    }
+
+    .tamara-disclaimer {
+        border-bottom: 1px solid #e3e3e8;
+        color: #4b4a6b;
+        font-size: 13px;
+        line-height: 1.55;
+        margin: 0;
+        padding: 24px 0;
+        text-align: left;
+
+        a {
+            color: inherit;
+            text-decoration: underline;
+        }
+    }
+}
+
+//
+//  Codilar 2XL back to top button (above the WhatsApp button, as on 2xlhome.com)
+//  _____________________________________________
+
+& when (@media-common = true) {
+    .back-to-top {
+        align-items: center;
+        background: none;
+        border: 0;
+        bottom: 130px;
+        box-shadow: none;
+        color: @twoxl-black;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        font-family: @twoxl-font;
+        font-size: 13px;
+        font-weight: 500;
+        gap: 2px;
+        line-height: 1;
+        padding: 0;
+        position: fixed;
+        right: 35px;
+        z-index: 98;
+
+        &[hidden] {
+            display: none;
+        }
+
+        &:hover,
+        &:focus,
+        &:active {
+            background: none;
+            border: 0;
+            box-shadow: none;
+            color: @twoxl-black;
+        }
+    }
+}
+
+//
+//  Codilar 2XL Recently Viewed (product page)
+//  _____________________________________________
+
+@twoxl-rv-gap: 10px;
+
+& when (@media-common = true) {
+    //  Luma limits .page-bottom to 1280px; the section spans the full window like on 2xlhome.com
+    .catalog-product-view .page-wrapper > .page-bottom,
+    .catalog-product-view .page-bottom .content {
+        margin: 0;
+        max-width: none;
+        padding: 0;
+    }
+
+    .block-viewed-products-grid.block.widget {
+        font-family: @twoxl-font;
+        margin: 40px 0 60px;
+        padding: 0 48px;
+
+        .block-title {
+            margin: 0 0 10px;
+
+            strong {
+                font-size: 20px;
+                font-weight: 400;
+                text-transform: uppercase;
+            }
+        }
+
+        .products-grid {
+            margin: 0;
+        }
+
+        //  Horizontal slider with a thin progress-style scrollbar
+        .product-items {
+            display: flex;
+            gap: @twoxl-rv-gap;
+            margin: 0;
+            overflow-x: auto;
+            padding: 0 0 16px;
+            scroll-snap-type: x mandatory;
+            scrollbar-color: #555 #ddd;
+            scrollbar-width: thin;
+
+            &::-webkit-scrollbar {
+                height: 4px;
+            }
+
+            &::-webkit-scrollbar-track {
+                background: #ddd;
+                border-radius: 2px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: #555;
+                border-radius: 2px;
+            }
+        }
+
+        .product-item {
+            flex: 0 0 calc((100% - 4 * @twoxl-rv-gap) / 5);
+            margin: 0;
+            padding: 0;
+            scroll-snap-align: start;
+            width: auto;
+        }
+
+        .product-item-info {
+            position: relative;
+            width: 100%;
+        }
+
+        .product-item-photo {
+            display: block;
+            margin: 0;
+        }
+
+        .product-image-container {
+            display: block;
+            width: 100% !important; // the widget sets the configured image width inline
+        }
+
+        .product-image-photo {
+            object-fit: cover;
+        }
+
+        .product-item-details {
+            display: grid;
+            gap: 0 8px;
+            grid-template-columns: minmax(0, 1fr) auto;
+            margin-top: 34px;
+        }
+
+        .product-item-name {
+            font-size: 14px;
+            font-weight: 400;
+            grid-column: 1;
+            margin: 0 0 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            white-space: nowrap;
+
+            a,
+            a:visited {
+                color: @twoxl-footer-text;
+            }
+        }
+
+        //  Old price, new price, discount
+        .price-box {
+            align-items: baseline;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            grid-column: 1;
+            margin: 0;
+
+            .price-label {
+                display: none;
+            }
+
+            .old-price {
+                order: -1;
+
+                .price {
+                    color: #8c8c8c;
+                    font-size: 12px;
+                    font-weight: 400;
+                    text-decoration: line-through;
+                }
+            }
+
+            .special-price .price,
+            .regular-price .price,
+            > .price-container .price {
+                color: @twoxl-footer-text;
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            .special-price .price {
+                color: #b30000;
+            }
+        }
+
+        .price-discount {
+            color: @twoxl-sale;
+            font-size: 12px;
+        }
+
+        //  Wishlist (top) and cart (below) icons on the right of the name / price
+        .product-item-actions {
+            align-items: flex-end;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 8px;
+            grid-column: 2;
+            grid-row: 1 / span 2;
+            margin: 0;
+        }
+
+        .actions-primary,
+        .actions-secondary {
+            display: block;
+            margin: 0;
+            padding: 0;
+            width: auto;
+        }
+
+        .action.tocart,
+        .action.towishlist {
+            background: no-repeat center / 24px 24px;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            display: block;
+            height: 28px;
+            margin: 0;
+            padding: 0;
+            width: 28px;
+
+            &:before {
+                display: none;
+            }
+
+            span {
+                .lib-visually-hidden();
+            }
+
+            &:hover,
+            &:focus {
+                border: 0;
+                box-shadow: none;
+                opacity: .7;
+            }
+        }
+
+        .action.tocart {
+            background-color: transparent;
+            background-image: url('../images/icons/cart.svg');
+        }
+
+        .action.towishlist {
+            background-image: url('../images/icons/heart.svg');
+        }
+
+        .product-item-description,
+        .stock.unavailable {
+            display: none;
+        }
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .block-viewed-products-grid.block.widget {
+        margin: 30px 0 40px;
+        padding: 0 20px;
+
+        .product-item {
+            flex-basis: calc((100% - @twoxl-rv-gap) / 2);
+        }
+
+        .product-item-details {
+            margin-top: 20px;
+        }
+
+        .price-box {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 2px;
+        }
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    //  Desktop: icons appear when hovering a card
+    .block-viewed-products-grid.block.widget {
+        .product-item-actions {
+            opacity: 0;
+            transition: opacity .2s ease;
+        }
+
+        .product-item:hover .product-item-actions,
+        .product-item-actions:focus-within {
+            opacity: 1;
+        }
+    }
+}
+
+//
+//  Codilar 2XL header wish list icon + guest wish list page
+//  _____________________________________________
+
+& when (@media-common = true) {
+    .header-wishlist .header-icon-trigger {
+        position: relative;
+    }
+
+    .header-wishlist-count {
+        background: @twoxl-black;
+        border-radius: 9px;
+        color: @twoxl-white;
+        font-size: 10px;
+        height: 16px;
+        line-height: 16px;
+        min-width: 16px;
+        padding: 0 4px;
+        position: absolute;
+        right: -4px;
+        text-align: center;
+        top: 2px;
+    }
+
+    //  Guest wish list page
+    .guest-wishlist-note {
+        font-size: 15px;
+        margin: 0 0 30px;
+
+        a {
+            color: @twoxl-black;
+            text-decoration: underline;
+        }
+    }
+
+    .guest-wishlist-items {
+        .lib-list-reset-styles();
+        display: grid;
+        gap: 30px 20px;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .guest-wishlist-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: 0;
+
+        .product-image-container {
+            display: block;
+            width: 100% !important; // inline width from the image config
+        }
+
+        //  Landscape like the Recently Viewed cards instead of Luma's portrait 240 x 300 box
+        .product-image-wrapper {
+            padding-bottom: 82% !important; // overrides the inline ratio
+        }
+
+        .product-image-photo {
+            height: 100%;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .price-box {
+            margin: 0;
+
+            .price-label {
+                display: none;
+            }
+
+            .old-price .price {
+                color: @twoxl-muted;
+                font-size: 13px;
+                font-weight: 400;
+                text-decoration: line-through;
+            }
+
+            .special-price .price {
+                color: #b30000;
+            }
+        }
+    }
+
+    .guest-wishlist-name {
+        font-size: 14px;
+        font-weight: 400;
+        text-transform: uppercase;
+
+        a,
+        a:visited {
+            color: @twoxl-footer-text;
+        }
+    }
+
+    .guest-wishlist-actions {
+        align-items: center;
+        display: flex;
+        gap: 16px;
+        margin-top: 4px;
+
+        .action.tocart {
+            background: @twoxl-black;
+            border: 1px solid @twoxl-black;
+            border-radius: 0;
+            color: @twoxl-white;
+            font-family: @twoxl-font;
+            font-size: 14px;
+            font-weight: 400;
+            padding: 10px 18px;
+            text-transform: uppercase;
+
+            &:hover {
+                background: #333;
+                border-color: #333;
+                color: @twoxl-white;
+                text-decoration: none;
+            }
+        }
+
+        .action.delete {
+            color: @twoxl-black;
+            font-size: 14px;
+            text-decoration: underline;
+        }
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .page-header .header-wishlist {
+        order: 3; // same as the account icon, so it sits right after it
+    }
+
+    .guest-wishlist-items {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .page-header .header.content .header-wishlist {
+        order: 4; // same as the account icon, so it sits right after it
+    }
+}
+
+//
+//  Codilar 2XL mega menu (desktop)
+//  _____________________________________________
+//  Magento's menu widget still opens/closes the panels (inline display + aria-expanded);
+//  these rules turn the level-1 dropdown into a full-width panel with column headings.
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .navigation {
+        //  Panels are positioned against the (sticky) menu bar, so they span the whole window
+        position: static;
+
+        .level0 {
+            position: static;
+        }
+
+        .level0 > .submenu {
+            background: @twoxl-white;
+            border: 0;
+            border-top: 1px solid #ececec;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, .08);
+            box-sizing: border-box;
+            font-family: @twoxl-font;
+            left: 0 !important;  // the widget positions dropdowns under their item
+            //  ~350px tall like 2xlhome.com; the rest scrolls inside the panel
+            max-height: ~"min(350px, calc(100vh - var(--twoxl-header-height, 127px) - 60px))"; // escaped: LESS has its own min()
+            overscroll-behavior: contain;
+            min-width: 0;
+            overflow-y: auto;
+            padding: 45px 20px 50px;
+            right: 0 !important;
+            text-transform: none;
+            top: 100% !important;
+            width: auto;
+
+            //  The widget marks an open panel with aria-expanded="true" (and display: block inline)
+            &[aria-expanded='true'] {
+                align-items: start;
+                display: grid !important;
+                gap: 50px 0;
+                grid-template-columns: repeat(4, 217px);
+                justify-content: center;
+            }
+
+            a {
+                color: @twoxl-black;
+                font-size: 15px;
+                letter-spacing: .2px;
+                line-height: 1.35;
+                padding: 0;
+
+                &:hover,
+                &.ui-state-focus {
+                    background: none;
+                    color: @twoxl-black;
+                    text-decoration: underline;
+                }
+            }
+
+            .active > a {
+                border: 0;
+            }
+        }
+
+        //  Column heading (e.g. "Sofa & Seating")
+        .level1 {
+            margin: 0;
+
+            > a {
+                display: inline-block;
+                font-size: 16px;
+                font-weight: 500;
+                margin-bottom: 14px;
+            }
+        }
+
+        //  Luma's 10px hover "bridge" (left: 100% of the item) ends up past the window edge now that
+        //  items are position: static, adding a sideways scrollbar; the full-width panel doesn't need it
+        .level0:hover:after {
+            display: none;
+        }
+
+        //  Luma sets overflow: visible !important on a hovered dropdown (for its fly-outs);
+        //  the panel must keep scrolling inside itself instead
+        .level0.parent:hover > .submenu {
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+        }
+
+        //  No fly-out arrows: sub-categories are listed under their heading
+        .level0 .submenu li.parent > a > .ui-menu-icon {
+            display: none;
+        }
+
+        //  Links under a heading: always shown as a plain list instead of a fly-out
+        .level1 > .submenu {
+            background: none;
+            border: 0;
+            box-shadow: none;
+            display: block !important;
+            left: auto !important;
+            margin: 0;
+            min-width: 0;
+            padding: 0;
+            position: static !important;
+            top: auto !important;
+
+            li {
+                margin: 0 0 13px;
+            }
+
+            .submenu {
+                display: none !important; // deeper levels aren't shown in the panel
+            }
+        }
+
+        .level0.parent > .level-top {
+            padding-right: 12px;
+
+            > .ui-menu-icon {
+                display: none;
+            }
+        }
+    }
+}

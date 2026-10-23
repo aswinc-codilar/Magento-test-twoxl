@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Black utility strip -->
+        <referenceContainer name="header.panel">
+            <block class="Magento\Framework\View\Element\Template" name="header.topbar" after="skip_to_content"
+                   template="Magento_Theme::html/header/top-bar.phtml"/>
+        </referenceContainer>
+
+        <!-- Logo -->
+        <referenceBlock name="logo">
+            <arguments>
+                <argument name="logo_width" xsi:type="number">56</argument>
+                <argument name="logo_height" xsi:type="number">76</argument>
+                <argument name="logo_alt" xsi:type="string">2XL Home</argument>
+            </arguments>
+        </referenceBlock>
+
+        <!-- Header icons: locale, account, (minicart), store locator -->
+        <referenceContainer name="header-wrapper">
+            <block class="Magento\Framework\View\Element\Template" name="header.locale" after="top.search"
+                   template="Magento_Theme::html/header/locale.phtml">
+                <arguments>
+                    <argument name="countries" xsi:type="array">
+                        <item name="uae" xsi:type="array">
+                            <item name="label" xsi:type="string">UAE</item>
+                            <item name="current" xsi:type="boolean">true</item>
+                        </item>
+                        <!-- No "url": shown in the list but not clickable -->
+                        <item name="oman" xsi:type="array">
+                            <item name="label" xsi:type="string">OMAN</item>
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+            <block class="Magento\Customer\Block\Account\Customer" name="header.account" after="header.locale"
+                   template="Magento_Customer::header/account.phtml"/>
+            <block class="Magento\Framework\View\Element\Template" name="header.wishlist" after="header.account"
+                   template="Codilar_GuestWishlist::header/link.phtml"/>
+            <block class="Magento\Framework\View\Element\Template" name="header.storelocator" after="minicart"
+                   template="Magento_Theme::html/header/store-locator.phtml">
+                <arguments>
+                    <argument name="store_locator_path" xsi:type="string">store-locator</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <!-- Account links go into the account icon dropdown -->
+        <move element="top.links" destination="header.account"/>
+        <move element="register-link" destination="top.links" before="authorization-link"/>
+
+        <referenceBlock name="header.links" remove="true"/>
+        <referenceBlock name="store_language" remove="true"/>
+        <referenceContainer name="compare-link-wrapper" remove="true"/>
+
+        <!-- Footer: link columns, newsletter, social icons, popular searches -->
+        <referenceContainer name="footer">
+            <block class="Magento\Framework\View\Element\Template" name="footer.twoxl" before="-"
+                   template="Magento_Theme::html/footer/footer.phtml"/>
+        </referenceContainer>
+        <move element="form.subscribe" destination="footer.twoxl" as="subscribe"/>
+        <referenceBlock name="form.subscribe" template="Magento_Newsletter::footer/subscribe.phtml"/>
+
+        <referenceBlock name="copyright" template="Magento_Theme::html/footer/copyright.phtml">
+            <arguments>
+                <argument name="brand_name" xsi:type="string">2XL Home</argument>
+            </arguments>
+        </referenceBlock>
+        <move element="copyright" destination="footer-container" after="-"/>
+
+        <referenceContainer name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template" name="back.to.top"
+                   template="Magento_Theme::html/back-to-top.phtml">
+                <arguments>
+                    <!-- px scrolled before the button appears -->
+                    <argument name="offset" xsi:type="number">300</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Framework\View\Element\Template" name="footer.whatsapp"
+                   template="Magento_Theme::html/footer/whatsapp.phtml">
+                <arguments>
+                    <argument name="phone" xsi:type="string">971800295</argument>
+                    <argument name="message" xsi:type="string">Hi 2XL Home, I need your assistance today!</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <referenceBlock name="footer_links" remove="true"/>
+        <referenceBlock name="store_switcher" remove="true"/>
+        <referenceContainer name="cms_footer_links_container" remove="true"/>
+    </body>
+</page>

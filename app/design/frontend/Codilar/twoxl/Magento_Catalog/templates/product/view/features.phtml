@@ -1,0 +1,46 @@
+<?php
+/**
+ * Service feature icons under the product info
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$svg = 'xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" '
+    . 'stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+
+$features = [
+    [
+        'title' => __('Free Shipping'),
+        'text'  => __('Eligible on orders above AED 500'),
+        'icon'  => '<svg ' . $svg . '><path d="M6 8h9v7H6zM15 10h3l2 2.5V15h-5"/><circle cx="8.5" cy="16" r="1.3"/>'
+            . '<circle cx="17" cy="16" r="1.3"/><path d="M2.5 9.5h2M2 11.5h2.5M3 13.5h2"/></svg>',
+    ],
+    [
+        'title' => __('Free Assembly'),
+        'text'  => __('Eligible on all furniture orders'),
+        'icon'  => '<svg ' . $svg . '><path d="M6 6h9l1.5 1.5L15 9H6zM8 9l-.8 4.5h3.3L11 9M7.2 13.5 6.5 19h3l1-5.5'
+            . 'M16.5 7.5H20"/></svg>',
+    ],
+    [
+        'title' => __('Warehouse Pickup'),
+        'text'  => __('Next day pick up available'),
+        'icon'  => '<svg ' . $svg . '><path d="M4 10 12 4.5 20 10v10H4z"/><path d="M8.5 20v-7h7v7M8.5 16.5h7M12 13v7"/></svg>',
+    ],
+    [
+        'title' => __('Interest Free Installments'),
+        'text'  => __('Hassle-free payments. Buy now pay later!'),
+        'icon'  => '<svg ' . $svg . '><rect x="8" y="3.5" width="7" height="17" rx="3.5"/>'
+            . '<path d="M13 17.5l4-4"/><circle cx="13.3" cy="14" r=".7"/><circle cx="16.7" cy="17.3" r=".7"/></svg>',
+    ],
+];
+?>
+<ul class="product-features">
+    <?php foreach ($features as $feature): ?>
+        <li class="product-feature">
+            <span class="product-feature-icon"><?= /* @noEscape */ $feature['icon'] ?></span>
+            <strong class="product-feature-title"><?= $escaper->escapeHtml($feature['title']) ?></strong>
+            <span class="product-feature-text"><?= $escaper->escapeHtml($feature['text']) ?></span>
+        </li>
+    <?php endforeach; ?>
+</ul>

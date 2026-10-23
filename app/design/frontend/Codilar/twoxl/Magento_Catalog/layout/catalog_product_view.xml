@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Gallery: stacked image grid on desktop, swipe slider on mobile -->
+        <referenceBlock name="product.info.media.image" template="Magento_Catalog::product/view/gallery-grid.phtml"/>
+
+        <referenceContainer name="product.info.main">
+            <!-- Title + wishlist heart -->
+            <container name="product.info.title.row" htmlTag="div" htmlClass="product-title-row" before="-"/>
+
+            <!-- Category name + review link -->
+            <container name="product.info.meta" htmlTag="div" htmlClass="product-info-meta" after="product.info.title.row">
+                <block class="Magento\Catalog\Block\Product\View" name="product.info.category"
+                       template="Magento_Catalog::product/view/category.phtml"/>
+            </container>
+
+            <block class="Magento\Catalog\Block\Product\View" name="product.info.rewards" after="product.info"
+                   template="Magento_Catalog::product/view/rewards.phtml">
+                <arguments>
+                    <argument name="vat_percent" xsi:type="number">5</argument>
+                    <argument name="points_per_aed" xsi:type="number">0.75</argument>
+                </arguments>
+            </block>
+
+            <block class="Magento\Catalog\Block\Product\View" name="product.info.installments" after="product.info.rewards"
+                   template="Magento_Catalog::product/view/installments.phtml">
+                <!-- count = number of payments, fee = total fee in % of the price (0 = interest free) -->
+                <arguments>
+                    <argument name="tabby_plans" xsi:type="array">
+                        <item name="p4" xsi:type="array">
+                            <item name="count" xsi:type="number">4</item>
+                            <item name="fee" xsi:type="number">0</item>
+                        </item>
+                        <item name="p6" xsi:type="array">
+                            <item name="count" xsi:type="number">6</item>
+                            <item name="fee" xsi:type="number">5</item>
+                        </item>
+                        <item name="p8" xsi:type="array">
+                            <item name="count" xsi:type="number">8</item>
+                            <item name="fee" xsi:type="number">9</item>
+                        </item>
+                        <item name="p12" xsi:type="array">
+                            <item name="count" xsi:type="number">12</item>
+                            <item name="fee" xsi:type="number">17</item>
+                        </item>
+                    </argument>
+                    <argument name="tamara_plans" xsi:type="array">
+                        <item name="p2" xsi:type="array">
+                            <item name="count" xsi:type="number">2</item>
+                            <item name="fee" xsi:type="number">0</item>
+                        </item>
+                        <item name="p3" xsi:type="array">
+                            <item name="count" xsi:type="number">3</item>
+                            <item name="fee" xsi:type="number">0</item>
+                        </item>
+                        <item name="p4" xsi:type="array">
+                            <item name="count" xsi:type="number">4</item>
+                            <item name="fee" xsi:type="number">0</item>
+                        </item>
+                        <item name="p6" xsi:type="array">
+                            <item name="count" xsi:type="number">6</item>
+                            <item name="fee" xsi:type="number">0</item>
+                        </item>
+                        <item name="p9" xsi:type="array">
+                            <item name="count" xsi:type="number">9</item>
+                            <item name="fee" xsi:type="number">17</item>
+                        </item>
+                        <item name="p12" xsi:type="array">
+                            <item name="count" xsi:type="number">12</item>
+                            <item name="fee" xsi:type="number">17</item>
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+
+            <block class="Magento\Catalog\Block\Product\View" name="product.info.warehouse" after="product.info.installments"
+                   template="Magento_Catalog::product/view/warehouse.phtml"/>
+
+            <!-- Product Description / Shipping and Returns accordions -->
+            <block class="Magento\Catalog\Block\Product\View" name="product.info.accordion" after="product.info.warehouse"
+                   template="Magento_Catalog::product/view/accordion.phtml"/>
+
+            <block class="Magento\Framework\View\Element\Template" name="product.info.features" after="product.info.accordion"
+                   template="Magento_Catalog::product/view/features.phtml"/>
+        </referenceContainer>
+
+        <referenceContainer name="product.info.price">
+            <block class="Magento\Catalog\Block\Product\View" name="product.info.discount" after="product.price.final"
+                   template="Magento_Catalog::product/view/discount.phtml"/>
+        </referenceContainer>
+
+        <referenceBlock name="product.info.addtocart" template="Magento_Catalog::product/view/addtocart.phtml"/>
+        <referenceBlock name="product.info.addtocart.additional" template="Magento_Catalog::product/view/addtocart.phtml"/>
+        <referenceBlock name="product.attributes" template="Magento_Catalog::product/view/attributes-grid.phtml"/>
+
+        <move element="page.main.title" destination="product.info.title.row"/>
+        <move element="view.addto.wishlist" destination="product.info.title.row" after="page.main.title"/>
+        <move element="product.info.review" destination="product.info.meta" after="product.info.category"/>
+        <move element="product.info.stock.sku" destination="product.info.main" after="product.info.meta"/>
+        <move element="product.info.description" destination="product.info.accordion" as="description"/>
+        <move element="product.attributes" destination="product.info.accordion" as="attributes"/>
+
+        <!-- Recently Viewed (Magento's widget; history is kept in the shopper's browser, current product excluded) -->
+        <referenceContainer name="page.bottom">
+            <block class="Magento\Catalog\Block\Widget\RecentlyViewed" name="product.recently.viewed"
+                   template="Magento_Catalog::product/widget/viewed/grid.phtml">
+                <arguments>
+                    <argument name="uiComponent" xsi:type="string">widget_recently_viewed</argument>
+                    <argument name="page_size" xsi:type="number">10</argument>
+                    <argument name="show_attributes" xsi:type="string">name,image,price</argument>
+                    <argument name="show_buttons" xsi:type="string">add_to_cart,add_to_wishlist</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <referenceBlock name="product.info.overview" remove="true"/>
+        <referenceBlock name="reviews.tab" remove="true"/>
+        <referenceBlock name="product.info.review" remove="true"/>
+        <referenceContainer name="product.info.social" remove="true"/>
+    </body>
+</page>

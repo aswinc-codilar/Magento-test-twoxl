@@ -1,0 +1,29 @@
+<!--
+/**
+ * Special (final) price in product widgets, followed by the "(N % OFF)" discount like 2xlhome.com
+ */
+-->
+<if args="hasSpecialPrice($row())">
+    <span class="special-price">
+        <span class="price-container"
+              css="getAdjustmentCssClasses($row())">
+            <span if="label"
+                  class="price-label"
+                  text="label"></span>
+
+            <span class="price-wrapper"
+                  css="priceWrapperCssClasses"
+                  attr="priceWrapperAttr"
+                  data-price-amount=""
+                  data-price-type="finalPrice"
+                  html="getPriceUnsanitizedHtml($row())"></span>
+
+            <each args="data: getAdjustments(), as: '$adj'">
+                <render args="$adj.getBody()"></render>
+            </each>
+        </span>
+    </span>
+    <span class="price-discount"
+          if="$row().price_info.regular_price > 0"
+          text="'(' + Math.round((1 - $row().price_info.final_price / $row().price_info.regular_price) * 100) + ' % OFF)'"></span>
+</if>

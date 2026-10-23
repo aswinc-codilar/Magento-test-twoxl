@@ -1,0 +1,297 @@
+<?php
+/**
+ * Tabby / Tamara "pay in installments" promo boxes, each opening a plans popup
+ *
+ * Plans come from the "tabby_plans" / "tamara_plans" layout arguments: number of payments and the
+ * total fee in percent of the price. Amounts = price x (1 + fee%) / payments, recalculated by
+ * js/installments.js whenever the product price changes.
+ *
+ * @var \Magento\Catalog\Block\Product\View $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$product = $block->getProduct();
+if (!$product->isSaleable()) {
+    return;
+}
+
+/** @var \Magento\Framework\Pricing\Helper\Data $priceHelper */
+$priceHelper = $this->helper(\Magento\Framework\Pricing\Helper\Data::class);
+$finalPrice = (float) $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
+$jsonConfig = json_decode($block->getJsonConfig(), true);
+
+$normalizePlans = function ($plans) {
+    $plans = array_values(array_map(function ($plan) {
+        return ['count' => (int) $plan['count'], 'fee' => (float) ($plan['fee'] ?? 0)];
+    }, (array) $plans));
+    usort($plans, function ($a, $b) {
+        return $a['count'] <=> $b['count'];
+    });
+    return $plans;
+};
+$tabbyPlans = $normalizePlans($block->getData('tabby_plans'));
+$tamaraPlans = $normalizePlans($block->getData('tamara_plans'));
+if (!$tabbyPlans || !$tamaraPlans) {
+    return;
+}
+
+$monthly = function (array $plan) use ($finalPrice) {
+    return $finalPrice * (1 + $plan['fee'] / 100) / $plan['count'];
+};
+$monthlyFee = function (array $plan) use ($finalPrice) {
+    return $finalPrice * $plan['fee'] / 100 / $plan['count'];
+};
+$money = function ($amount) use ($priceHelper) {
+    return $priceHelper->currency($amount, true, false);
+};
+
+// The box text quotes the lowest monthly amount (the longest plan)
+$tabbyLongest = end($tabbyPlans);
+$tabbyFreeCount = $tabbyPlans[0]['count'];
+$tamaraLongest = end($tamaraPlans);
+
+/**
+ * Renders an amount that js/installments.js keeps in sync with the price box
+ */
+$amount = function (array $plan, string $type, string $suffix = '') use ($escaper, $money, $monthly, $monthlyFee) {
+    $value = $type === 'fee' ? $monthlyFee($plan) : $monthly($plan);
+    return sprintf(
+        '<span data-installment-amount data-count="%d" data-fee="%s" data-type="%s" data-suffix="%s">%s</span>',
+        $plan['count'],
+        $escaper->escapeHtmlAttr((string) $plan['fee']),
+        $escaper->escapeHtmlAttr($type),
+        $escaper->escapeHtmlAttr($suffix),
+        $escaper->escapeHtml($money($value) . $suffix)
+    );
+};
+
+/**
+ * Small payment method badges shown at the bottom of the popups
+ */
+$paymentLogos = function (array $methods) {
+    $logos = [
+        'mastercard' => '<svg viewBox="0 0 38 24" aria-label="Mastercard" role="img"><circle cx="15" cy="12" r="7" fill="#eb001b"/>'
+            . '<circle cx="23" cy="12" r="7" fill="#f79e1b" fill-opacity=".9"/>'
+            . '<path d="M19 6.4a7 7 0 0 1 0 11.2 7 7 0 0 1 0-11.2Z" fill="#ff5f00"/></svg>',
+        'visa' => '<svg viewBox="0 0 38 24" aria-label="Visa" role="img"><text x="19" y="16.5" text-anchor="middle" '
+            . 'font-family="Arial, sans-serif" font-size="11" font-weight="700" font-style="italic" fill="#1a1f71">VISA</text></svg>',
+        'applepay' => '<svg viewBox="0 0 38 24" aria-label="Apple Pay" role="img"><path d="M11.3 8.4c.4-.5.7-1.2.6-1.9-.6 0-1.3.4-1.7.9-.4.4-.7 1.1-.6 1.8.6 0 1.3-.3 1.7-.8Zm.6 1c-.9 0-1.7.5-2.1.5-.5 0-1.1-.5-1.9-.5-1 0-1.9.6-2.4 1.5-1 1.8-.3 4.4.7 5.8.5.7 1 1.5 1.8 1.4.7 0 1-.5 1.8-.5.9 0 1.1.5 1.9.5s1.3-.7 1.7-1.4c.5-.8.8-1.6.8-1.6s-1.5-.6-1.5-2.3c0-1.4 1.1-2.1 1.2-2.2-.7-1-1.7-1.1-2-1.2Z" fill="#000"/>'
+            . '<text x="25" y="16" text-anchor="middle" font-family="Arial, sans-serif" font-size="9.5" font-weight="600" fill="#000">Pay</text></svg>',
+        'googlepay' => '<svg viewBox="0 0 38 24" aria-label="Google Pay" role="img"><text x="8" y="16" font-family="Arial, sans-serif" font-size="9.5" font-weight="700">'
+            . '<tspan fill="#4285f4">G</tspan></text><text x="16.5" y="16" font-family="Arial, sans-serif" font-size="9.5" fill="#5f6368">Pay</text></svg>',
+    ];
+    $html = '<div class="installment-payment-logos">';
+    foreach ($methods as $method) {
+        $html .= '<span class="installment-payment-logo">' . $logos[$method] . '</span>';
+    }
+    return $html . '</div>';
+};
+?>
+<div class="product-installments"
+     data-mage-init='<?= $escaper->escapeHtmlAttr(json_encode(['productInstallments' => [
+         'priceFormat' => $jsonConfig['priceFormat'] ?? null,
+         'productId'   => (int) $product->getId(),
+     ]])) ?>'>
+    <div class="installment-box installment-tabby" role="button" tabindex="0"
+         aria-haspopup="dialog" data-installment-open="tabby">
+        <p class="installment-text">
+            <?= $escaper->escapeHtml(__('As low as')) ?>
+            <strong><?= /* @noEscape */ $amount($tabbyLongest, 'monthly', '/' . __('month')) ?></strong>
+            <?= $escaper->escapeHtml(__('or %1 interest-free payments.', $tabbyFreeCount)) ?>
+            <span class="installment-link"><?= $escaper->escapeHtml(__('Learn more')) ?></span>
+        </p>
+        <span class="installment-logo tabby-logo" aria-label="Tabby">tabby</span>
+    </div>
+
+    <div class="installment-box installment-tamara" role="button" tabindex="0"
+         aria-haspopup="dialog" data-installment-open="tamara">
+        <p class="installment-text">
+            <?= $escaper->escapeHtml(__('From')) ?>
+            <strong><?= /* @noEscape */ $amount($tamaraLongest, 'monthly') ?></strong>/<?= $escaper->escapeHtml(__('Month for up to %1 months, no late fees!', $tamaraLongest['count'])) ?>
+            <span class="installment-more"><?= $escaper->escapeHtml(__('More options')) ?></span>
+        </p>
+        <span class="installment-logo tamara-logo" aria-label="Tamara">tamara</span>
+    </div>
+
+    <!-- Tabby popup -->
+    <div class="installment-modal installment-modal-tabby" data-installment-modal="tabby"
+         role="dialog" aria-modal="true" aria-labelledby="tabby-modal-title" hidden>
+        <div class="installment-modal-panel" tabindex="-1">
+            <div class="installment-modal-header">
+                <span class="tabby-wordmark" aria-label="Tabby">tabby</span>
+                <button type="button" class="installment-modal-close" data-installment-close
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Close')) ?>">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                        <path d="M4 4l12 12M16 4 4 16"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="tabby-hero" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="220" height="150" viewBox="0 0 220 150">
+                    <ellipse cx="110" cy="132" rx="70" ry="10" fill="#1d1d1b" opacity=".85"/>
+                    <path d="M110 70 L110 20 A50 50 0 0 1 160 70 Z" fill="#f2c94c" stroke="#1d1d1b" stroke-width="2.5"/>
+                    <path d="M110 70 L160 70 A50 50 0 0 1 110 120 Z" fill="#dba6f0" stroke="#1d1d1b" stroke-width="2.5"/>
+                    <path d="M110 70 L110 120 A50 50 0 0 1 60 70 Z" fill="#b57edc" stroke="#1d1d1b" stroke-width="2.5"/>
+                    <path d="M104 64 L54 64 A50 50 0 0 1 104 14 Z" fill="#e6efff" stroke="#1d1d1b" stroke-width="2.5"/>
+                    <g fill="#fff" stroke="#1d1d1b" stroke-width="2.5">
+                        <circle cx="34" cy="88" r="13"/><path d="M28 100v28M40 100v28M28 112h12"/>
+                        <circle cx="186" cy="92" r="13"/><path d="M180 104v26M192 104v26M180 116h12"/>
+                    </g>
+                </svg>
+            </div>
+            <h2 class="installment-modal-title" id="tabby-modal-title"><?= $escaper->escapeHtml(__('Get more time to pay')) ?></h2>
+            <p class="installment-modal-subtitle">
+                <?= $escaper->escapeHtml(__('Split your purchase in up to %1 payments', $tabbyLongest['count'])) ?>
+            </p>
+            <ul class="tabby-plans">
+                <?php foreach ($tabbyPlans as $plan): ?>
+                    <li class="tabby-plan">
+                        <div class="tabby-plan-row">
+                            <span><?= $escaper->escapeHtml(__('%1 payments', $plan['count'])) ?></span>
+                            <span><?= /* @noEscape */ $amount($plan, 'monthly', '/' . __('mo')) ?></span>
+                        </div>
+                        <?php if ($plan['fee'] > 0): ?>
+                            <p class="tabby-plan-note">
+                                <?= $escaper->escapeHtml(__('Includes')) ?>
+                                <?= /* @noEscape */ $amount($plan, 'fee') ?>
+                                <?= $escaper->escapeHtml(__('monthly fee')) ?>
+                            </p>
+                        <?php else: ?>
+                            <p class="tabby-plan-note free"><?= $escaper->escapeHtml(__('No interest. No fees.')) ?></p>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+            <div class="tabby-how">
+                <h3><?= $escaper->escapeHtml(__('How it works')) ?></h3>
+                <ol>
+                    <li><?= $escaper->escapeHtml(__('Choose Tabby at checkout to select a payment plan')) ?></li>
+                    <li><?= $escaper->escapeHtml(__('Enter your information and add your debit or credit card')) ?></li>
+                    <li><?= $escaper->escapeHtml(__('Depending on your plan, you may or may not make a down payment')) ?></li>
+                    <li><?= $escaper->escapeHtml(__('We\'ll send you a reminder when your next payment is due')) ?></li>
+                </ol>
+            </div>
+            <div class="tabby-feature">
+                <span class="tabby-feature-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
+                         stroke="#3762e4" stroke-width="1.6" stroke-linecap="round">
+                        <circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/>
+                        <path d="M15 5.2a3 3 0 0 1 0 5.6M17 14.3c1.8.6 3 2.2 3.5 4.7"/>
+                    </svg>
+                </span>
+                <div>
+                    <strong><?= $escaper->escapeHtml(__('Trusted by millions')) ?></strong>
+                    <p><?= $escaper->escapeHtml(__('Over 20 million shoppers discover products and pay their way with Tabby')) ?></p>
+                </div>
+            </div>
+            <div class="tabby-feature">
+                <span class="tabby-feature-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" fill="#3762e4"/>
+                        <path d="m7.5 12.3 3 3 6-6.3" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
+                <div>
+                    <strong><?= $escaper->escapeHtml(__('Shop safely with Tabby')) ?></strong>
+                    <p><?= $escaper->escapeHtml(__('Buyer protection is included with every purchase')) ?></p>
+                </div>
+            </div>
+            <button type="button" class="tabby-continue" data-installment-close>
+                <?= $escaper->escapeHtml(__('Continue shopping')) ?>
+            </button>
+            <?= /* @noEscape */ $paymentLogos(['mastercard', 'visa', 'applepay', 'googlepay']) ?>
+        </div>
+    </div>
+
+    <!-- Tamara popup -->
+    <div class="installment-modal installment-modal-tamara" data-installment-modal="tamara"
+         role="dialog" aria-modal="true" aria-labelledby="tamara-modal-title" hidden>
+        <div class="installment-modal-panel" tabindex="-1">
+            <button type="button" class="installment-modal-close" data-installment-close
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Close')) ?>">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 20 20" fill="none"
+                     stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+                    <path d="M4 4l12 12M16 4 4 16"/>
+                </svg>
+            </button>
+            <span class="installment-logo tamara-logo tamara-modal-logo" aria-label="Tamara">tamara</span>
+            <h2 class="installment-modal-title" id="tamara-modal-title">
+                <?= $escaper->escapeHtml(__('Your payment,')) ?><br><?= $escaper->escapeHtml(__('your pace')) ?>
+            </h2>
+            <p class="installment-modal-subtitle">
+                <?= $escaper->escapeHtml(__('Pay as low as')) ?>
+                <strong><?= /* @noEscape */ $amount($tamaraLongest, 'monthly', '/' . __('mo')) ?></strong>,
+                <?= $escaper->escapeHtml(__('or in %1 payments', $tamaraLongest['count'])) ?>
+            </p>
+            <p class="tamara-plans-title"><?= $escaper->escapeHtml(__('Example plans')) ?></p>
+            <ul class="tamara-plans">
+                <?php foreach ($tamaraPlans as $plan): ?>
+                    <li class="tamara-plan">
+                        <div>
+                            <strong><?= /* @noEscape */ $amount($plan, 'monthly', '/' . __('mo')) ?></strong>
+                            <?php if ($plan['count'] <= 3 && $plan['fee'] <= 0): ?>
+                                <span class="tamara-plan-note free"><?= $escaper->escapeHtml(__('No fees')) ?></span>
+                            <?php else: ?>
+                                <span class="tamara-plan-note"><?= $escaper->escapeHtml(__('Fees may apply')) ?></span>
+                            <?php endif; ?>
+                        </div>
+                        <span class="tamara-plan-badge"><?= $escaper->escapeHtml(__('%1 Payments', $plan['count'])) ?></span>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+            <?php
+            $tamaraSteps = [
+                [__('Pick a plan that works for you'),
+                    __('Choose Tamara at checkout and select the payment plan that fits your needs.')],
+                [__('Pay your first payment securely'),
+                    __('Enter your card details to make your first payment safely and instantly.')],
+                [__('Stay in control'),
+                    __('Track and manage all your upcoming payments easily in the Tamara app.')],
+                [__('We’ve got your back'),
+                    __('Get helpful reminders before each payment, no surprises.')],
+            ];
+            ?>
+            <div class="tamara-how">
+                <h3><?= $escaper->escapeHtml(__('How it works?')) ?></h3>
+                <ol>
+                    <?php foreach ($tamaraSteps as [$title, $text]): ?>
+                        <li>
+                            <strong><?= $escaper->escapeHtml($title) ?></strong>
+                            <p><?= $escaper->escapeHtml($text) ?></p>
+                        </li>
+                    <?php endforeach; ?>
+                </ol>
+            </div>
+            <div class="tamara-why">
+                <h3><?= $escaper->escapeHtml(__('Why Tamara?')) ?></h3>
+                <div class="tamara-why-items">
+                    <div class="tamara-why-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+                            <circle cx="15" cy="15" r="15" fill="#3ed598"/>
+                            <circle cx="12.5" cy="12" r="3.3" fill="#1f1f1f"/>
+                            <path d="M6.5 21.5c.6-3 3-4.8 6-4.8s5.4 1.8 6 4.8Z" fill="#1f1f1f"/>
+                            <path d="m18.5 12.5 2 2 3.5-3.7" fill="none" stroke="#1f1f1f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span><?= $escaper->escapeHtml(__('100%')) ?><br><?= $escaper->escapeHtml(__('buyer protection')) ?></span>
+                    </div>
+                    <div class="tamara-why-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+                            <circle cx="15" cy="15" r="15" fill="#fbd3ec"/>
+                            <rect x="8" y="10" width="14" height="10" rx="1.5" fill="#1f1f1f"/>
+                            <path d="M8 13.2h14" stroke="#fbd3ec" stroke-width="1.4"/>
+                            <path d="m7.5 8.5 15 13" stroke="#fbd3ec" stroke-width="2.6"/>
+                            <path d="m7.5 8.5 15 13" stroke="#1f1f1f" stroke-width="1.1" stroke-linecap="round"/>
+                        </svg>
+                        <span><?= $escaper->escapeHtml(__('No late')) ?><br><?= $escaper->escapeHtml(__('fees')) ?></span>
+                    </div>
+                </div>
+                <p class="tamara-disclaimer">
+                    <?= $escaper->escapeHtml(__('Payment plans shown are estimates. Actual offers may vary based on your eligibility and order details. Not all merchants or products qualify for every plan, including Tamara’s long-term financing options. Approval is subject to eligibility checks and may require a down payment. Final terms, including monthly payment amounts, may change after checkout review and may exclude taxes, shipping, or other charges. For more information, see our')) ?>
+                    <a href="https://tamara.co/en-AE/terms-and-conditions" target="_blank" rel="noopener"><?= $escaper->escapeHtml(__('Terms & Conditions')) ?></a>
+                </p>
+                <?= /* @noEscape */ $paymentLogos(['applepay', 'mastercard', 'visa']) ?>
+            </div>
+        </div>
+    </div>
+</div>

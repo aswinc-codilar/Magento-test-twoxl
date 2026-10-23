@@ -1,0 +1,38 @@
+<?php
+/**
+ * Header account icon with links dropdown
+ *
+ * @var \Magento\Customer\Block\Account\Customer $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<div class="header-icon header-account">
+    <button type="button"
+            class="header-icon-trigger"
+            title="<?= $escaper->escapeHtmlAttr(__('My Account')) ?>"
+            aria-label="<?= $escaper->escapeHtmlAttr(__('My Account')) ?>"
+            data-mage-init='{"dropdown":{}}'
+            data-toggle="dropdown"
+            data-trigger-keypress-button="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20.5c.8-3.8 4-6 8-6s7.2 2.2 8 6Z"/>
+        </svg>
+    </button>
+    <div class="header-dropdown" data-target="dropdown">
+        <?php if ($block->customerLoggedIn()): ?>
+            <p class="greet welcome" data-bind="scope: 'customer'">
+                <!-- ko if: customer().fullname -->
+                <span data-bind="text: $t('Welcome, %1!').replace('%1', customer().fullname)"></span>
+                <!-- /ko -->
+            </p>
+            <script type="text/x-magento-init">
+                {"*": {"Magento_Ui/js/core/app": {"components": {"customer": {
+                    "component": "Magento_Customer/js/view/customer"
+                }}}}}
+            </script>
+        <?php endif; ?>
+        <?= $block->getChildHtml() ?>
+    </div>
+</div>

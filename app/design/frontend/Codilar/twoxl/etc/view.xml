@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+    Merged on top of Magento/luma's view.xml: only the values listed here change.
+-->
+<view xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Config/etc/view.xsd">
+    <media>
+        <images module="Magento_Catalog">
+            <!-- Recently Viewed cards on the product page: landscape like 2xlhome.com (600 x 492) -->
+            <image id="recently_viewed_products_grid_content_widget" type="small_image">
+                <width>600</width>
+                <height>492</height>
+            </image>
+        </images>
+    </media>
+</view>

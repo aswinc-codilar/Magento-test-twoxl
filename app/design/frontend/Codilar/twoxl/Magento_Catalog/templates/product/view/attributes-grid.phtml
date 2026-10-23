@@ -1,0 +1,22 @@
+<?php
+/**
+ * Product attributes as a two-column "LABEL: value" grid
+ *
+ * @var \Magento\Catalog\Block\Product\View\Attributes $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+/** @var \Magento\Catalog\Helper\Output $outputHelper */
+$outputHelper = $this->helper(\Magento\Catalog\Helper\Output::class);
+$product = $block->getProduct();
+?>
+<?php if ($additional = $block->getAdditionalData()): ?>
+    <dl class="product-attributes-grid" id="product-attribute-specs-table">
+        <?php foreach ($additional as $data): ?>
+            <div class="product-attribute">
+                <dt><?= $escaper->escapeHtml($data['label']) ?>:</dt>
+                <dd><?= /* @noEscape */ $outputHelper->productAttribute($product, $data['value'], $data['code']) ?></dd>
+            </div>
+        <?php endforeach; ?>
+    </dl>
+<?php endif; ?>

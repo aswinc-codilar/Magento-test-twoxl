@@ -1,0 +1,11 @@
+<?php
+/**
+ * Footer copyright line
+ *
+ * @var \Magento\Theme\Block\Html\Footer $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<small class="copyright">
+    <span><?= $escaper->escapeHtml(__('Copyrights © %1 %2, All rights reserved.', date('Y'), $block->getData('brand_name'))) ?></span>
+</small>

@@ -1,0 +1,61 @@
+<?php
+/**
+ * Sougha reward points line ("EARN 2554 POINTS")
+ *
+ * Points = final price without VAT x points per AED (defaults: 5% VAT, 0.75 points per AED),
+ * which matches 2xlhome.com (AED 3,575 -> 2554 points, AED 535 -> 382 points).
+ *
+ * @var \Magento\Catalog\Block\Product\View $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$product = $block->getProduct();
+if (!$product->isSaleable()) {
+    return;
+}
+
+$finalPrice = (float) $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
+$vatPercent = (float) ($block->getData('vat_percent') ?? 5);
+$pointsPerAed = (float) ($block->getData('points_per_aed') ?? 0.75);
+$points = (int) round($finalPrice / (1 + $vatPercent / 100) * $pointsPerAed);
+
+// QR-style logo mark: 8x8 grid, "1" = filled cell
+$logoRows = [
+    '11101111',
+    '10101001',
+    '11101101',
+    '00000000',
+    '11110111',
+    '00100101',
+    '10110111',
+    '11010001',
+];
+$cell = 4.5;
+?>
+<?php if ($points > 0): ?>
+    <div class="product-rewards">
+        <svg class="product-rewards-logo" xmlns="http://www.w3.org/2000/svg" width="36" height="48" viewBox="0 0 36 48"
+             role="img" aria-label="<?= $escaper->escapeHtmlAttr(__('Sougha')) ?>">
+            <g fill="#000" shape-rendering="crispEdges">
+                <?php foreach ($logoRows as $row => $cells): ?>
+                    <?php foreach (str_split($cells) as $col => $filled): ?>
+                        <?php if ($filled === '1'): ?>
+                            <rect x="<?= $col * $cell ?>" y="<?= $row * $cell ?>" width="<?= $cell ?>" height="<?= $cell ?>"/>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
+            </g>
+            <text x="18" y="46" text-anchor="middle" font-family="Arial, sans-serif" font-size="5.5" letter-spacing="1.6">SOUGHA</text>
+        </svg>
+        <span class="product-rewards-text"><?= $escaper->escapeHtml(__('Earn %1 points', $points)) ?></span>
+        <span class="product-rewards-help" tabindex="0"
+              title="<?= $escaper->escapeHtmlAttr(__('Sougha Reward: earn %1 points with this purchase.', $points)) ?>">
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 12 12" fill="none"
+                 stroke="currentColor" stroke-width="1" aria-hidden="true">
+                <circle cx="6" cy="6" r="5.3"/>
+                <path d="M4.6 4.6a1.4 1.4 0 1 1 2 1.3c-.4.2-.6.5-.6.9v.3" stroke-linecap="round"/>
+                <circle cx="6" cy="8.8" r=".35" fill="currentColor"/>
+            </svg>
+        </span>
+    </div>
+<?php endif; ?>

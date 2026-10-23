@@ -1,0 +1,24 @@
+<?php
+/**
+ * Warehouse pickup eligibility note
+ *
+ * @var \Magento\Catalog\Block\Product\View $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<?php if ($block->getProduct()->isSaleable()): ?>
+    <div class="product-warehouse">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="40" viewBox="0 0 36 40" fill="none"
+             stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <path d="M2 14 18 3l16 11v24H2z"/>
+            <path d="M11 38V24h14v14M11 31h14M18 24v14"/>
+        </svg>
+        <div class="product-warehouse-content">
+            <strong class="product-warehouse-title"><?= $escaper->escapeHtml(__('Warehouse')) ?></strong>
+            <p>
+                <?= $escaper->escapeHtml(__('Eligible for Warehouse Pickup.')) ?>
+                <a href="<?= $escaper->escapeUrl($block->getUrl('click-n-collect-tnc')) ?>"><?= $escaper->escapeHtml(__('Learn More')) ?></a>
+            </p>
+        </div>
+    </div>
+<?php endif; ?>

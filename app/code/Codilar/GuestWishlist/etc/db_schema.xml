@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="codilar_guest_wishlist_item" resource="default" engine="innodb" comment="Wish list items of guests (moved to the customer wish list on login)">
+        <column xsi:type="int" name="item_id" unsigned="true" nullable="false" identity="true" comment="Item ID"/>
+        <column xsi:type="varchar" name="guest_token" nullable="false" length="64" comment="Guest wish list cookie token"/>
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" comment="Store ID"/>
+        <column xsi:type="text" name="buy_request" nullable="true" comment="Buy request JSON (selected options)"/>
+        <column xsi:type="timestamp" name="added_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Added At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="item_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="CODILAR_GUEST_WISHLIST_ITEM_GUEST_TOKEN_PRODUCT_ID">
+            <column name="guest_token"/>
+            <column name="product_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="CODILAR_GUEST_WISHLIST_ITEM_PRODUCT_ID_CAT_PRD_ENTT_ENTT_ID"
+                    table="codilar_guest_wishlist_item" column="product_id"
+                    referenceTable="catalog_product_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="CODILAR_GUEST_WISHLIST_ITEM_STORE_ID_STORE_STORE_ID"
+                    table="codilar_guest_wishlist_item" column="store_id"
+                    referenceTable="store" referenceColumn="store_id" onDelete="CASCADE"/>
+        <index referenceId="CODILAR_GUEST_WISHLIST_ITEM_ADDED_AT" indexType="btree">
+            <column name="added_at"/>
+        </index>
+    </table>
+</schema>

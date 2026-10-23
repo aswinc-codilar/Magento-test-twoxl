@@ -1,0 +1,51 @@
+<?php
+/**
+ * Footer newsletter form (underlined email field + grey subscribe button)
+ *
+ * @var \Magento\Newsletter\Block\Subscribe $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+/** @var \Magento\Framework\View\Element\ButtonLockManager|null $buttonLockManager */
+$buttonLockManager = $block->getData('button_lock_manager');
+?>
+<div class="block newsletter footer-newsletter-form">
+    <form class="form subscribe"
+          novalidate
+          action="<?= $escaper->escapeUrl($block->getFormActionUrl()) ?>"
+          method="post"
+          data-mage-init='{"validation": {"errorClass": "mage-error"}}'
+          id="newsletter-validate-detail">
+        <div class="field newsletter">
+            <label for="newsletter" class="label">
+                <span><?= $escaper->escapeHtml(__('Email')) ?></span>
+            </label>
+            <div class="control">
+                <input name="email" type="email" id="newsletter"
+                       placeholder="<?= $escaper->escapeHtmlAttr(__('Enter your email')) ?>"
+                       data-mage-init='{"mage/trim-input":{}}'
+                       data-validate="{required:true, 'validate-email':true}"/>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="action subscribe"
+                    title="<?= $escaper->escapeHtmlAttr(__('Subscribe')) ?>"
+                    type="submit"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Subscribe')) ?>"
+                <?php if ($buttonLockManager?->isDisabled('newsletter_form_submit')): ?>
+                    disabled="disabled"
+                <?php endif; ?>>
+                <span><?= $escaper->escapeHtml(__('Subscribe')) ?></span>
+            </button>
+        </div>
+    </form>
+</div>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Customer/js/block-submit-on-send": {
+                "formId": "newsletter-validate-detail"
+            }
+        }
+    }
+</script>
